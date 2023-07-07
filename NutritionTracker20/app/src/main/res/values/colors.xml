@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="glavna_boja">#FFD162A4</color>
+    <color name="druga_glavna_boja">#FFF17628</color>
+    <color name="belicasta_boja">#FFF8D9C6</color>
+    <color name="jedna_ljubicasta_boja_reda_radi">#FF9D53FF</color>
+
+    <color name="tamna_glavna_boja">#FF25002E</color>
+    <color name="tamna_druga_glavna_boja">#FFA32265</color>
+    <color name="jedna_tamnija_ljubicasta_boja_reda_radi">#FFBA5895</color>
+</resources>

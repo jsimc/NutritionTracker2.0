@@ -1,0 +1,29 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.NutritionTracker20" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/glavna_boja</item>
+        <item name="colorPrimaryVariant">@color/jedna_ljubicasta_boja_reda_radi</item>
+        <item name="colorSecondary">@color/druga_glavna_boja</item>
+        <item name="backgroundColor">@color/belicasta_boja</item>
+        <item name="colorOnBackground">@color/tamna_glavna_boja</item>
+        <item name="colorSurface">@color/jedna_ljubicasta_boja_reda_radi</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="Theme.NutritionTracker20" parent="Base.Theme.NutritionTracker20"/>
+
+    <style name="Theme.App.Intro" parent="Theme.SplashScreen">
+        <!-- Set the splash screen background, animated icon, and animation duration. -->
+        <item name="windowSplashScreenBackground">@color/druga_glavna_boja</item>
+
+        <!-- Use windowSplashScreenAnimatedIcon to add either a drawable or an
+             animated drawable. One of these is required. -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/baza_sharp_108x108</item>
+
+        <!-- Set the theme of the Activity that directly follows your splash screen. -->
+        <!-- Required -->
+        <item name="postSplashScreenTheme">@style/Theme.NutritionTracker20</item>
+    </style>
+</resources>

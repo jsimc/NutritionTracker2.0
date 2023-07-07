@@ -1,0 +1,20 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.NutritionTracker20" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+
+        <item name="colorPrimary">@color/tamna_glavna_boja</item>
+        <item name="colorPrimaryVariant">@color/jedna_ljubicasta_boja_reda_radi</item>
+        <item name="colorSecondary">@color/glavna_boja</item>
+        <item name="backgroundColor">@color/tamna_druga_glavna_boja</item>
+        <item name="colorOnBackground">@color/belicasta_boja</item>
+        <item name="colorSurface">@color/jedna_tamnija_ljubicasta_boja_reda_radi</item>
+        <item name="colorOnSurface">@color/belicasta_boja</item>
+        <item name="colorOnPrimary">@color/belicasta_boja</item>
+        <!-- REMOVE DEFAULT SPLASH SCREEN -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
+    </style>
+</resources>
