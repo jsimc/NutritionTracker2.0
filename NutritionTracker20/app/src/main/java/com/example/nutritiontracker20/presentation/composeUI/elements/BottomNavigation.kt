@@ -13,6 +13,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.nutritiontracker20.R
 import com.example.nutritiontracker20.utils.CREATE_PLAN_SCREEN
 import com.example.nutritiontracker20.utils.HOME_PAGE
+import com.example.nutritiontracker20.utils.LOGIN_SCREEN
 import com.example.nutritiontracker20.utils.PROFILE_SCREEN
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -23,6 +24,13 @@ fun MyBottomNavigation(navController: NavController) {
         BottomNavigationItemData("Home Page", Icons.Default.Home, HOME_PAGE),
         BottomNavigationItemData("Profile", Icons.Default.Person, PROFILE_SCREEN)
     )
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    if (currentRoute == null || currentRoute == LOGIN_SCREEN) {
+        return
+    }
 
     BottomNavigation {
         val navBackStackEntry by navController.currentBackStackEntryAsState()

@@ -13,15 +13,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.nutritiontracker20.presentation.composeUI.elements.KategorijaListView
+import com.example.nutritiontracker20.presentation.composeUI.elements.MyDropDownMenu
 import com.example.nutritiontracker20.presentation.composeUI.elements.SearchBar
 import com.example.nutritiontracker20.presentation.contracts.MealContract
 
 @Composable
 fun HomePage(mealViewModel: MealContract.ViewModel, navController: NavController) { //DI mealViewModel u pocetni ekran, HomePage nam je kao pocetni ekran
+    val listItems = listOf("Kategorija", "Oblast", "Sastojci")
     Column {
         TopAppBar {
             //TODO ovde mozemo da ubacimo npr dugme gde mozemo videti sve favorite
-            MyDropDownMenu()
+            MyDropDownMenu(listItems = listItems, onClick = {}, modifier = Modifier.fillMaxWidth())
         }
         SearchBar(onSearch = {mealViewModel.searchCategory(it)})
 //        TextField (modifier = Modifier.fillMaxWidth(), value = "",
@@ -44,61 +46,6 @@ fun HomePage(mealViewModel: MealContract.ViewModel, navController: NavController
             }
         }
 
-    }
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun MyDropDownMenu() {
-    val listItems = arrayOf("Kategorija", "Oblast", "Sastojci")
-    val contextForToast = LocalContext.current.applicationContext
-
-    // state of the menu
-    var expanded by remember {
-        mutableStateOf(false)
-    }
-
-    // remember the selected item
-    var selectedItem by remember {
-        mutableStateOf(listItems[0])
-    }
-
-    // box
-    ExposedDropdownMenuBox(
-        modifier = Modifier.fillMaxWidth(),
-        expanded = expanded,
-        onExpandedChange = {
-            expanded = !expanded
-        }
-    ) {
-        // text field
-        TextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = selectedItem,
-            onValueChange = {},
-            readOnly = true,
-            colors = ExposedDropdownMenuDefaults.textFieldColors()
-        )
-
-        // menu
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            // this is a column scope
-            // all the items are added vertically
-            listItems.forEach { selectedOption ->
-                // menu item
-                DropdownMenuItem(onClick = {
-                    selectedItem = selectedOption
-                    // TODO  JOS nesto se dogadja ovde!?
-                    Toast.makeText(contextForToast, selectedOption, Toast.LENGTH_SHORT).show()
-                    expanded = false
-                }, modifier = Modifier.clip(MaterialTheme.shapes.medium)) {
-                    Text(text = selectedOption)
-                }
-            }
-        }
     }
 }
 

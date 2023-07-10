@@ -6,7 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import io.reactivex.Completable
 import io.reactivex.Observable
-import com.example.nutritiontracker20.data.models.SavedMealsEntity
+import com.example.nutritiontracker20.data.entities.SavedMealsEntity
 
 @Dao
 abstract class SavedMealDao {

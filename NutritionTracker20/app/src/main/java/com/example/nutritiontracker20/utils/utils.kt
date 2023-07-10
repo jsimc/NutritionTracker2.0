@@ -7,7 +7,11 @@ const val MEAL_DETAIL_PAGE = "meal_detail_page"
 const val SAVE_MEAL_SCREEN = "save_meal_screen"
 const val PROFILE_SCREEN = "profile_screen"
 const val CREATE_PLAN_SCREEN = "create_plan_screen"
+const val LOGIN_SCREEN = "login_screen"
 //------------------------------------------------------
 const val MAIN_GRAPH = "main_graph"
 const val INTRO_GRAPH = "intro_graph"
 const val ROOT_GRAPH = "root_graph"
+//------------------------------------------------------
+const val DEFAULT_USERNAME = "nata"
+const val DEFAULT_PASSWORD = "1312"

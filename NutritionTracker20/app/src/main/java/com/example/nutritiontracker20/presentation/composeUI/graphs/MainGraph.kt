@@ -1,24 +1,15 @@
 package com.example.nutritiontracker20.presentation.composeUI.graphs
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import com.example.nutritiontracker20.presentation.composeUI.screens.*
 import com.example.nutritiontracker20.presentation.contracts.MealContract
+import com.example.nutritiontracker20.presentation.contracts.UserContract
 import com.example.nutritiontracker20.utils.*
-
-@Composable
-fun MainGraph(navController: NavHostController, mealViewModel: MealContract.ViewModel, paddingValues: PaddingValues) {
-    NavHost(
-        navController = navController,
-        route = MAIN_GRAPH,
-        startDestination = HOME_PAGE,
-        modifier= Modifier.padding(paddingValues)
-    ) {
+fun NavGraphBuilder.mainGraph(navController: NavController, mealViewModel: MealContract.ViewModel, userViewModel: UserContract.ViewModel) {
+    navigation(startDestination = HOME_PAGE, route = MAIN_GRAPH) {
         composable(route = HOME_PAGE) {
             HomePage(mealViewModel = mealViewModel, navController = navController)
         }
@@ -32,7 +23,7 @@ fun MainGraph(navController: NavHostController, mealViewModel: MealContract.View
             SaveMealScreen(navController = navController)
         }
         composable(route = PROFILE_SCREEN) {
-            ProfileScreen()
+            ProfileScreen(userViewModel = userViewModel, navController = navController)
         }
         composable(route = CREATE_PLAN_SCREEN) {
             CreatePlanScreen()

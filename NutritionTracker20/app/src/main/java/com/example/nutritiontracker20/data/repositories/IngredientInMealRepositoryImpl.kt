@@ -3,8 +3,7 @@ package com.example.nutritiontracker20.data.repositories
 import io.reactivex.Completable
 import io.reactivex.Observable
 import com.example.nutritiontracker20.data.datasources.daos.IngredientInMealDao
-import com.example.nutritiontracker20.data.models.IngredientInMealEntity
-import com.example.nutritiontracker20.data.repositories.IngredientInMealRepository
+import com.example.nutritiontracker20.data.entities.IngredientInMealEntity
 
 class IngredientInMealRepositoryImpl(private val ingredientInMealDao: IngredientInMealDao) :
     IngredientInMealRepository {

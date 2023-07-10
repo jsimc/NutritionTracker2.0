@@ -9,6 +9,7 @@ import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 import com.example.nutritiontracker20.modules.coreModule
 import com.example.nutritiontracker20.modules.mealModule
+import com.example.nutritiontracker20.modules.userModule
 
 class NutritionTracker20Application : Application(){
     override fun onCreate() {
@@ -31,7 +32,8 @@ class NutritionTracker20Application : Application(){
     private fun initKoin() {
         val modules = listOf(
             coreModule,
-            mealModule
+            mealModule,
+            userModule
         )
         startKoin {
             androidLogger(Level.ERROR)

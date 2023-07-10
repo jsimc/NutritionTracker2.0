@@ -3,15 +3,16 @@ package com.example.nutritiontracker20.data.repositories
 import io.reactivex.Completable
 import io.reactivex.Observable
 import com.example.nutritiontracker20.data.datasources.daos.UserDao
-import com.example.nutritiontracker20.data.models.UserEntity
-import com.example.nutritiontracker20.data.repositories.UserRepository
+import com.example.nutritiontracker20.data.entities.UserEntity
 import com.example.nutritiontracker20.utils.eActivity
 import com.example.nutritiontracker20.utils.eGender
 
 class UserRepositoryImpl(private val userDao: UserDao) : UserRepository {
 
-    override fun getUser(username: String): UserEntity {
-        return userDao.getByUsername(username)
+    override fun getUser(username: String): Observable<UserEntity> {
+        return Observable.fromCallable {
+            userDao.getByUsername(username)
+        }
     }
 
     override fun insert(userEntity: UserEntity): Completable {
@@ -22,8 +23,12 @@ class UserRepositoryImpl(private val userDao: UserDao) : UserRepository {
         return userDao.getAll()
     }
 
-    override fun update(userEntity: UserEntity) {
+    override fun update(userEntity: UserEntity): Completable {
+        return Completable.fromCallable{
+            userDao.update(userEntity)
+        }
         TODO("nmp kako ovo da uradim isk al mozda i ne treba??")
+        // mozda da update bude kao za sve ovo? nzm
     }
 
     override fun updatePassword(username: String, password: String): Completable {

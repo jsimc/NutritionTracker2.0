@@ -9,7 +9,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 import io.reactivex.Completable
 import io.reactivex.Observable
-import com.example.nutritiontracker20.data.models.UserEntity
+import com.example.nutritiontracker20.data.entities.UserEntity
 
 @Dao
 abstract class UserDao {
