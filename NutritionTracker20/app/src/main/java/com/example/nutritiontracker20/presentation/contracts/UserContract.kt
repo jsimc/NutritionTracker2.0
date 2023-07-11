@@ -7,14 +7,21 @@ import com.example.nutritiontracker20.utils.eGender
 
 interface UserContract {
     interface ViewModel {
-        val isLoggedIn: LiveData<Boolean>
+        val tmp: LiveData<User>
         val loggedUser: LiveData<User>
+        val suggestedKcal: LiveData<Int>
 //        val username: LiveData<String>
 
         // hocemo li ostale informacije o korisniku da vadimo iz baze ili isto da ih imamo ovako u view modelu?
-        fun checkForUser(username:String, password: String): Boolean
+        suspend fun checkForUser(username:String, password: String)
 //        suspend fun setLoggedIn(b: Boolean/**, user: User*/)
 
+        fun changeTmp(newTmp: User)
+        fun changeUser(user: User)
+        fun insertUser(user: User)
+        fun setUser(user: User)
+
+        fun updateUser(user: User)
         fun updateInfo(username: String, password: String, age: Int, height: Int, weight: Int, gender: eGender, weeklyActivity: eActivity)
 
         // set funkcije su samo da se postavi na viewmodel

@@ -15,3 +15,8 @@ const val ROOT_GRAPH = "root_graph"
 //------------------------------------------------------
 const val DEFAULT_USERNAME = "nata"
 const val DEFAULT_PASSWORD = "1312"
+const val DEFAULT_AGE = 21
+const val DEFAULT_HEIGHT = 150
+const val DEFAULT_WEIGHT = 7
+val DEFAULT_GENDER = eGender.FEMALE
+val DEFAULT_WEEKLY_ACTIVITY = eActivity.ThreeOrFourTimes

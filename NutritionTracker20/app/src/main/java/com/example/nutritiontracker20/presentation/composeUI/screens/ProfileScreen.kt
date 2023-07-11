@@ -9,6 +9,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,13 +22,8 @@ import androidx.navigation.NavController
 import com.example.nutritiontracker20.R
 import com.example.nutritiontracker20.data.models.User
 import com.example.nutritiontracker20.presentation.composeUI.elements.MyDropDownMenu
-import com.example.nutritiontracker20.presentation.composeUI.graphs.RootNavigationGraph
 import com.example.nutritiontracker20.presentation.contracts.UserContract
-import com.example.nutritiontracker20.utils.INTRO_GRAPH
-import com.example.nutritiontracker20.utils.LOGIN_SCREEN
-import com.example.nutritiontracker20.utils.eActivity
-import com.example.nutritiontracker20.utils.eGender
-import java.net.UnknownServiceException
+import com.example.nutritiontracker20.utils.*
 
 @Composable
 fun ProfileScreen(userViewModel: UserContract.ViewModel, navController: NavController) {
@@ -37,24 +33,18 @@ fun ProfileScreen(userViewModel: UserContract.ViewModel, navController: NavContr
     val genders = listOf(eGender.FEMALE, eGender.MALE, eGender.OTHER)
     val activities = listOf(eActivity.LittleToNoExercise, eActivity.OneOrTwoTimes, eActivity.ThreeOrFourTimes, eActivity.FiveOrMoreTimes)
 
-    val username = sharedPreferences.getString("username", "jelena")?: "jelena"
-
-    // moze li neesto tipa:
-//    val age by remember { userViewModel.getAge(username) }
-    // Pitaj Natu, glupa si JELENAAAAA
-
-
-    // npr
-//    val user: User = userViewModel.getUserByUsername(username)
-    // i onda -> user.age, user.weekly
-    // samo mi treba da funkcija iz userViewModela.
+    val tmpObs = userViewModel.tmp.observeAsState()
+    
+    val user = userViewModel.loggedUser.observeAsState(/*initial = User(
+        DEFAULT_USERNAME, DEFAULT_PASSWORD, DEFAULT_AGE, DEFAULT_HEIGHT, DEFAULT_WEIGHT, DEFAULT_GENDER, DEFAULT_WEEKLY_ACTIVITY
+    )*/)
+    user.value?.suggestedKcal = kcalCalculator(user.value?.gender!!, user.value?.height!!, user.value?.weight!!, user.value?.age!!)
 
     LazyColumn(horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier.fillMaxSize()
     ) {
         item {
-            // ocemo li i sliku cuvati u bazi? --> ??
             Image(
                 painter = painterResource(id = R.drawable.default_face),
                 contentDescription = "profile",
@@ -62,43 +52,51 @@ fun ProfileScreen(userViewModel: UserContract.ViewModel, navController: NavContr
             )
         }
         //TODO
-        // username
+// USERNAME
         item {
             // TODO OMFGH RADI
             // ali username ne treba da moze da se menja!
-            RowItemTextField(label = "username", initialString = sharedPreferences.getString("username", "")?:"", readOnly = true, onChange = {})
+            RowItemTextField(label = "username", initialValue = user.value?.username ?: "Not available", readOnly = true, onChange = {})
         }
         // Nema menjanja lozinke bas me briga
-        // password
+// PASSWORD
         item {
-            RowItemTextField(label = "password", initialString = sharedPreferences.getString("password", "")?:"", readOnly = true, onChange = {})
+            RowItemTextField(label = "password", initialValue = user.value?.password ?: "Not available", readOnly = true, onChange = {})
         }
-
+// AGE
         item {
-            RowItemTextField(label = "age", initialString = /*age?.toString() ?: */"Not available", onChange = {})
+            RowItemTextField(label = "age (in years)", initialValue = user.value?.age?.toString() ?: "Not available", onChange = {
+                if (it == "") userViewModel.loggedUser.value?.age = 0 //user.value?.age = 0
+                else userViewModel.loggedUser.value?.age = it.toInt() //user.value?.age = it.toInt()
+            })
         }
 // GENDER
         item {
-            RowItemDropDown(label = "gender", listItems = genders, onClick = { })
+            RowItemDropDown(label = "gender", listItems = genders, firstSelected = user.value?.gender) { user.value?.gender = it as eGender }
         }
+// WEIGHT
         item {
-            RowItemTextField(label = "weight", initialString = /*weight?.toString() ?:*/ "Not available", onChange = {})
+            RowItemTextField(label = "weight (in kg)", initialValue = user.value?.weight?.toString() ?: "Not available", onChange = {
+                if (it == "") {user.value?.weight = 0}
+                else {user.value?.weight = it.toInt()}
+                println(user.value!!.weight)})
         }
-        item {
-            RowItemTextField(label = "height", initialString = /*height?.toString() ?: */"Not available", onChange = {})
+// HEIGHT
+        item {// ovo updateuje
+            RowItemTextField(label = "height (in cm)", initialValue = user.value?.height?.toString() ?: "Not available", onChange = {
+                if (it == "") user.value?.height = 0
+                else user.value?.height = it.toInt() })
         }
 
 // ACTIVITY drop down menu
         item {
-            RowItemDropDown(label = "activity level", listItems = activities,  onClick = {
-                println("ITTTTT: $it")
-                userViewModel.updateWeeklyActivity(username, it as eActivity)})
+            RowItemDropDown(label = "activity level", listItems = activities, firstSelected = user.value?.weeklyActivity) {
+                user.value?.weeklyActivity = it as eActivity
+            }
         }
-
+// KCAL INTAKE
         item {
-            /**viewModel.changeUsername()*/
-            /**viewModel.changeUsername()*/
-            RowItemTextField(label = "Recommended calory intake", initialString = /*kcalIntake?.toString() ?:*/ "Not available", readOnly = true, onChange = {})
+            RowItemTextField(label = "Recommended calory intake", initialValue = user.value?.suggestedKcal.toString() ?: "Not available", initialForKcal = user, readOnly = true, onChange = {})
         }
 
         item {
@@ -108,17 +106,19 @@ fun ProfileScreen(userViewModel: UserContract.ViewModel, navController: NavContr
                 .padding(6.dp)
                 .fillMaxWidth()) {
                 Button(onClick = {
-//                    userViewModel.updateInfo()
-
+//                    userViewModel.setUser(user.value!!.username)
+//                    userViewModel.updateUser(User(user.value!!.username, user.value!!.password, age, height, weight, gender, activity, kcalCalculator(gender!!, height!!, weight!!, age!!)))
+                    val newUser = User(user.value!!.username, user.value!!.password, user.value!!.age, user.value!!.height,
+                        user.value!!.weight, user.value!!.gender, user.value!!.weeklyActivity, kcalCalculator(user.value?.gender!!, user.value?.height!!, user.value?.weight!!, user.value?.age!!))
+                    userViewModel.changeUser(newUser)
+                    println("newUser: $newUser")
                 }) {
                     Text(text="Save user info")
                 }
                 Button(onClick = {
-                    sharedPreferences.edit().clear().apply()
-                    navController.popBackStack()
-                    //nema ga! na ovom kontroleru!
-//                    RootNavigationGraph(navController = , mealViewModel = , userViewModel = )
-                    navController.navigate(INTRO_GRAPH)
+//                    sharedPreferences.edit().clear().apply()
+//                    navController.popBackStack()
+//                    navController.navigate(INTRO_GRAPH)
                 }) {
                     Text(text="Log off")
                 }
@@ -128,10 +128,15 @@ fun ProfileScreen(userViewModel: UserContract.ViewModel, navController: NavContr
 }
 
 @Composable
-fun RowItemTextField(label: String, initialString: String, readOnly: Boolean = false, onChange: (String)->Unit) {
+fun RowItemTextField(label: String, initialValue: String, initialForKcal: State<User?>? = null, readOnly: Boolean = false, onChange: (String)->Unit) {
     var textFieldValue by remember {
-        mutableStateOf(initialString)
+        mutableStateOf(initialValue)
     }
+
+    if (initialForKcal != null && initialForKcal.value != null) {
+        textFieldValue = initialForKcal.value!!.suggestedKcal.toString()
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -155,7 +160,7 @@ fun RowItemTextField(label: String, initialString: String, readOnly: Boolean = f
 }
 
 @Composable
-fun RowItemDropDown(label: String, listItems: List<Any>, onClick: (Any?)->Unit) {
+fun RowItemDropDown(label: String, listItems: List<Any>, firstSelected: Any?, onClick: (Any?)->Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -167,7 +172,8 @@ fun RowItemDropDown(label: String, listItems: List<Any>, onClick: (Any?)->Unit) 
             modifier = Modifier.weight(1f),
             style = TextStyle(fontSize = 16.sp)
         )
-        MyDropDownMenu(listItems = listItems, onClick = onClick, modifier = Modifier.weight(1f))
+
+        MyDropDownMenu(listItems = listItems, onClick = onClick, firstSelected = listItems.indexOf(firstSelected), modifier = Modifier.weight(1f))
 
     }
 }

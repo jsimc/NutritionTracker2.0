@@ -10,20 +10,27 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import com.example.nutritiontracker20.presentation.contracts.UserContract
 import com.example.nutritiontracker20.utils.MAIN_GRAPH
-import kotlinx.coroutines.currentCoroutineContext
+import io.reactivex.Completable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 @Composable
@@ -33,6 +40,8 @@ fun LoginScreen(navController: NavController, userViewModel: UserContract.ViewMo
 
     val username = rememberSaveable { mutableStateOf("") }
     val password = rememberSaveable { mutableStateOf("") }
+
+    val user = userViewModel.loggedUser.observeAsState()
 
     Column(
         modifier = Modifier.padding(20.dp),
@@ -62,25 +71,23 @@ fun LoginScreen(navController: NavController, userViewModel: UserContract.ViewMo
                 onClick = {
                     // ovo je kao proverava da li ga ima u bazi --> mogao bi da vrati usera ako jeste u bazi.
 //                    val user: User = userViewModel.checkForUser(username, password) --> vraca usera ako ga ima, ako ga nema
-                    if(userViewModel.checkForUser(username = username.value, password = password.value)) {
-//                        userViewModel.setHelperName(username.value)
-//                        userViewModel.setUsername(username.value)
-//                        userViewModel.setPassword(password.value)
+                            //userViewModel.checkForUser(username = username.value, password = password.value)
+                    //a ne znam vise nista mi ovde nije jasno!
 
-
-                        // TODO
-                        //  NE ZNAM ZASTO ALI BAGUJE NA OVOM DELU, ako se ovo zakomentarise, onda ne pravi problem sa Threadovima
-                        val edit = sharedPreferences.edit()
-                        edit.putBoolean("user_logged_in", true)
-                        edit.putString("username", username.value)
-                        edit.putString("password", password.value)
-                        edit.apply()
-
-                        navController.popBackStack()
-                        navController.navigate(MAIN_GRAPH)
-                    } else {
-                        Toast.makeText(context, "Wrong credentials!", Toast.LENGTH_SHORT).show()
-                    }
+//                        if(userViewModel.checkForUser(username=  username.value, password = password.value)) {
+//                            // TODO
+//                            //  NE ZNAM ZASTO ALI BAGUJE NA OVOM DELU, ako se ovo zakomentarise, onda ne pravi problem sa Threadovima
+////                            val edit = sharedPreferences.edit()
+////                            edit.putBoolean("user_logged_in", true)
+////                            edit.putString("username", username.value)
+////                            edit.putString("password", password.value)
+////                            edit.apply()
+//
+//                            navController.popBackStack()
+//                            navController.navigate(MAIN_GRAPH)
+//                        } else {
+//                            Toast.makeText(context, "Wrong credentials! username: ${username.value}, pass: ${password.value}", Toast.LENGTH_SHORT).show()
+//                        }
                 },
                 shape = RoundedCornerShape(50.dp),
                 modifier = Modifier

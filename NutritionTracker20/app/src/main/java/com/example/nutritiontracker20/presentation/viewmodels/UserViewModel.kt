@@ -2,31 +2,123 @@ package com.example.nutritiontracker20.presentation.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.nutritiontracker20.data.helpers.userEntityToUser
 import com.example.nutritiontracker20.data.helpers.userToUserEntity
 import com.example.nutritiontracker20.data.models.User
 import com.example.nutritiontracker20.data.repositories.UserRepository
 import com.example.nutritiontracker20.presentation.contracts.UserContract
-import com.example.nutritiontracker20.utils.eActivity
-import com.example.nutritiontracker20.utils.eGender
+import com.example.nutritiontracker20.utils.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.launch
 
 class UserViewModel(private val userRepository: UserRepository
 ) : ViewModel(), UserContract.ViewModel {
 
     private val subscriptions = CompositeDisposable()
-    override val isLoggedIn: MutableLiveData<Boolean> = MutableLiveData(false)
-    override val loggedUser: MutableLiveData<User> = MutableLiveData()
+    override var loggedUser: MutableLiveData<User> = MutableLiveData()
+    override var suggestedKcal: MutableLiveData<Int> = MutableLiveData(0)
 
     init {
-        println("INIT BLOK USERVIEWMODEL")
+        viewModelScope.launch {
+            println("INIT BLOK USERVIEWMODEL")
+            println("Logged user1: ${loggedUser.value}")
+            val sub = userRepository
+                .getAll()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                { it ->
+                    loggedUser.value = it.map {
+                        userEntityToUser(it)
+                    }[0]
+                    tmp.value = loggedUser.value
+                },
+                {
+
+                })
+            subscriptions.add(sub)
+        }
+
     }
 
-    override fun checkForUser(username: String, password: String): Boolean {
-        return true
+    override val tmp: MutableLiveData<User> = MutableLiveData()
+    override fun changeTmp(newTmp: User) {
+        tmp.value = newTmp
     }
 
+    //check for user: potrazi u bazi usera sa datim imenom, ako ga ima odmah postavlja da je loggedUser taj
+    // i trebalo bi da obavesti view -> tj login screen da je uspesno ulogovan i da moze da se prebaci na homepage
+    override suspend fun checkForUser(username: String, password: String) {
+        val sub = userRepository
+            .getUser(username)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    loggedUser.value = userEntityToUser(it)
+                },
+                {
+                    println("ISLOGGEDIN = FALSE")
+                }
+            )
+        subscriptions.add(sub)
+    }
+
+
+    override fun setUser(user: User) {
+        val sub = userRepository
+            .getUser(user.username)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    loggedUser.value = user //userEntityToUser(it)
+//                    suggestedKcal.value = it.suggestedKcal ?: suggestedKcal.value
+                    println("COMPLETED - GET USER - ${loggedUser.value}")
+                },
+                {
+
+                }
+            )
+        subscriptions.add(sub)
+    }
+
+    override fun insertUser(user: User) {
+        val sub = userRepository.insert(userToUserEntity(user))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    println("COMPLETED - ADDED USER - $user")
+                },
+                {
+                    println("NOT COMPLETED - NOT ADDED USER")
+                }
+            )
+        subscriptions.add(sub)
+    }
+
+    override fun changeUser(user: User) {
+        loggedUser.value = user
+    }
+
+    override fun updateUser(user: User) {
+        val sub = userRepository
+            .update(userToUserEntity(user))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { /* updated! */
+                    setUser(user)
+                    println("updated")},
+                { /* not updated! */ println("not updated")}
+            )
+        subscriptions.add(sub)
+    }
+////////////////////////////////////////////////////////////////////////
     override fun updateInfo(username: String, password: String, age: Int, height: Int, weight: Int, gender: eGender, weeklyActivity: eActivity) {
         updatePassword(username, password)
         updateAge(username, age)
@@ -34,18 +126,6 @@ class UserViewModel(private val userRepository: UserRepository
         updateHeight(username, height)
         updateWeight(username, weight)
         updateWeeklyActivity(username, weeklyActivity)
-    }
-
-    fun update() {
-        val sub = userRepository
-            .update(userToUserEntity(loggedUser.value!!))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {},
-                {}
-            )
-        subscriptions.add(sub)
     }
 
 
