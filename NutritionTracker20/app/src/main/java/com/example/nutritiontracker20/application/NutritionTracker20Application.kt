@@ -22,7 +22,6 @@ class NutritionTracker20Application : Application(){
     private fun init() {
         initTimber()
         initKoin()
-
     }
 
     private fun initTimber() {
