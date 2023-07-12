@@ -13,7 +13,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -22,6 +21,7 @@ import androidx.navigation.NavController
 import com.example.nutritiontracker20.R
 import com.example.nutritiontracker20.data.models.User
 import com.example.nutritiontracker20.presentation.composeUI.elements.MyDropDownMenu
+import com.example.nutritiontracker20.presentation.composeUI.elements.Statistics
 import com.example.nutritiontracker20.presentation.contracts.UserContract
 import com.example.nutritiontracker20.utils.*
 
@@ -65,7 +65,7 @@ fun ProfileScreen(userViewModel: UserContract.ViewModel, navController: NavContr
         }
 // AGE
         item {
-            RowItemTextField(label = "age (in years)", initialValue = user.value?.age?.toString() ?: "Not available", onChange = {
+            RowItemTextField(label = "age (in years)", initialValue = user.value?.age?.toString() ?: "Not available", initial = user, onChange = {
                 if (it == "") userViewModel.loggedUser.value?.age = 0 //user.value?.age = 0
                 else userViewModel.loggedUser.value?.age = it.toInt() //user.value?.age = it.toInt()
             })
@@ -76,14 +76,14 @@ fun ProfileScreen(userViewModel: UserContract.ViewModel, navController: NavContr
         }
 // WEIGHT
         item {
-            RowItemTextField(label = "weight (in kg)", initialValue = user.value?.weight?.toString() ?: "Not available", onChange = {
+            RowItemTextField(label = "weight (in kg)", initialValue = user.value?.weight?.toString() ?: "Not available", initial = user, onChange = {
                 if (it == "") {user.value?.weight = 0}
                 else {user.value?.weight = it.toInt()}
                 println(user.value!!.weight)})
         }
 // HEIGHT
         item {// ovo updateuje
-            RowItemTextField(label = "height (in cm)", initialValue = user.value?.height?.toString() ?: "Not available", onChange = {
+            RowItemTextField(label = "height (in cm)", initialValue = user.value?.height?.toString() ?: "Not available", initial = user, onChange = {
                 if (it == "") user.value?.height = 0
                 else user.value?.height = it.toInt() })
         }
@@ -96,7 +96,11 @@ fun ProfileScreen(userViewModel: UserContract.ViewModel, navController: NavContr
         }
 // KCAL INTAKE
         item {
-            RowItemTextField(label = "Recommended calory intake", initialValue = user.value?.suggestedKcal.toString() ?: "Not available", initialForKcal = user, readOnly = true, onChange = {})
+            RowItemTextField(label = "Recommended calory intake", initialValue = user.value?.suggestedKcal.toString() ?: "Not available", initial = user, forKcalBool = true, readOnly = true, onChange = {})
+        }
+        
+        item {
+            Statistics(savedMeals = SAVED_MEALS)
         }
 
         item {
@@ -106,19 +110,18 @@ fun ProfileScreen(userViewModel: UserContract.ViewModel, navController: NavContr
                 .padding(6.dp)
                 .fillMaxWidth()) {
                 Button(onClick = {
-//                    userViewModel.setUser(user.value!!.username)
-//                    userViewModel.updateUser(User(user.value!!.username, user.value!!.password, age, height, weight, gender, activity, kcalCalculator(gender!!, height!!, weight!!, age!!)))
-                    val newUser = User(user.value!!.username, user.value!!.password, user.value!!.age, user.value!!.height,
-                        user.value!!.weight, user.value!!.gender, user.value!!.weeklyActivity, kcalCalculator(user.value?.gender!!, user.value?.height!!, user.value?.weight!!, user.value?.age!!))
-                    userViewModel.changeUser(newUser)
+                  val newUser = 
+                      User(user.value!!.username, user.value!!.password, user.value!!.age, user.value!!.height, 
+                          user.value!!.weight, user.value!!.gender, user.value!!.weeklyActivity, kcalCalculator(user.value?.gender!!, user.value?.height!!, user.value?.weight!!, user.value?.age!!))
+                    userViewModel.updateUser(newUser)
                     println("newUser: $newUser")
                 }) {
                     Text(text="Save user info")
                 }
                 Button(onClick = {
-//                    sharedPreferences.edit().clear().apply()
-//                    navController.popBackStack()
-//                    navController.navigate(INTRO_GRAPH)
+                    sharedPreferences.edit().clear().apply()
+                    navController.popBackStack()
+                    navController.navigate(INTRO_GRAPH)
                 }) {
                     Text(text="Log off")
                 }
@@ -128,13 +131,13 @@ fun ProfileScreen(userViewModel: UserContract.ViewModel, navController: NavContr
 }
 
 @Composable
-fun RowItemTextField(label: String, initialValue: String, initialForKcal: State<User?>? = null, readOnly: Boolean = false, onChange: (String)->Unit) {
+fun RowItemTextField(label: String, initialValue: String, initial: State<User?>? = null, forKcalBool: Boolean = false, readOnly: Boolean = false, onChange: (String)->Unit) {
     var textFieldValue by remember {
         mutableStateOf(initialValue)
     }
 
-    if (initialForKcal != null && initialForKcal.value != null) {
-        textFieldValue = initialForKcal.value!!.suggestedKcal.toString()
+    if (forKcalBool) {
+        textFieldValue = initial!!.value!!.suggestedKcal.toString()
     }
 
     Row(

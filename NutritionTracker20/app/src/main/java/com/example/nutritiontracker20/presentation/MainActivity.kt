@@ -1,10 +1,12 @@
 package com.example.nutritiontracker20.presentation
 
-import android.content.SharedPreferences
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.Scaffold
+import androidx.core.app.ActivityCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.example.nutritiontracker20.data.models.User
@@ -19,6 +21,7 @@ import com.example.nutritiontracker20.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
+//    private val MY_CAMERA_REQUEST_CODE = 100
 
     private val mealViewModel: MealContract.ViewModel by viewModel<MealViewModel>()
     private val userViewModel: UserContract.ViewModel by viewModel<UserViewModel>()
@@ -53,14 +56,30 @@ class MainActivity : AppCompatActivity() {
         // e sad da li ce ove dve inser i setLogged da se atomicno pozovu ili jok?
         userViewModel.insertUser(defaultUser)
         userViewModel.setUser(defaultUser)
-        val sharedPreferences: SharedPreferences = applicationContext.getSharedPreferences("loggedIn", MODE_PRIVATE)
+//        initPermissions()
+//        val sharedPreferences: SharedPreferences = applicationContext.getSharedPreferences("loggedIn", MODE_PRIVATE)
 //        sharedPreferences.edit().clear().apply()
-        val edit = sharedPreferences.edit()
-        edit.putBoolean("user_logged_in", true)
-        edit.putString("username", defaultUser.username)
-        edit.putString("password", defaultUser.password)
-        edit.apply()
+//        val edit = sharedPreferences.edit()
+//        edit.putBoolean("user_logged_in", true)
+//        edit.putString("username", defaultUser.username)
+//        edit.putString("password", defaultUser.password)
+//        edit.apply()
     }
 
+//    private fun initPermissions() {
+//        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+//            requestPermissions(arrayOf(Manifest.permission.CAMERA), MY_CAMERA_REQUEST_CODE);
+//        }
+//    }
 
+//    override fun onRequestPermissionsResult(
+//        requestCode: Int,
+//        permissions: Array<out String>,
+//        grantResults: IntArray
+//    ) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//        if (requestCode == MY_CAMERA_REQUEST_CODE) {
+//            CAMERA_PERMISSION = grantResults[0] == PackageManager.PERMISSION_GRANTED
+//        }
+//    }
 }

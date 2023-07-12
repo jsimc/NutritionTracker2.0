@@ -20,6 +20,7 @@ class UserViewModel(private val userRepository: UserRepository
     private val subscriptions = CompositeDisposable()
     override var loggedUser: MutableLiveData<User> = MutableLiveData()
     override var suggestedKcal: MutableLiveData<Int> = MutableLiveData(0)
+    override var flagIsLoggedIn: MutableLiveData<Boolean> = MutableLiveData(false)
 
     init {
         viewModelScope.launch {
@@ -35,6 +36,7 @@ class UserViewModel(private val userRepository: UserRepository
                         userEntityToUser(it)
                     }[0]
                     tmp.value = loggedUser.value
+                    println("Logged user2: ${loggedUser.value}")
                 },
                 {
 
@@ -51,14 +53,17 @@ class UserViewModel(private val userRepository: UserRepository
 
     //check for user: potrazi u bazi usera sa datim imenom, ako ga ima odmah postavlja da je loggedUser taj
     // i trebalo bi da obavesti view -> tj login screen da je uspesno ulogovan i da moze da se prebaci na homepage
-    override suspend fun checkForUser(username: String, password: String) {
+    override fun checkForUser(username: String, password: String) {
+        println("USERNAMMME: $username, $password")
         val sub = userRepository
             .getUser(username)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    loggedUser.value = userEntityToUser(it)
+                    println("FLAG: true")
+                    flagIsLoggedIn.value = true
+//                    loggedUser.value = userEntityToUser(it)
                 },
                 {
                     println("ISLOGGEDIN = FALSE")

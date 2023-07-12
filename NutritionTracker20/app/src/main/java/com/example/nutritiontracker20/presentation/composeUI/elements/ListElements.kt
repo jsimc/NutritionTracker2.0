@@ -55,6 +55,7 @@ fun MyPopup (mealViewModel: MealContract.ViewModel) {
             onDismissRequest = { expanded = false },
             modifier = Modifier.padding(10.dp)
         ) {
+            // mealViewModel.
             Text (text = "INFOOOO")
         }
     }

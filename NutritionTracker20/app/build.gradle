@@ -125,5 +125,20 @@ dependencies {
     // optional - RxJava2 support
     implementation "androidx.datastore:datastore-preferences-rxjava2:1.0.0"
 
+    //CameraX
+    def camerax_version = "1.2.3"
+    implementation "androidx.camera:camera-core:${camerax_version}"
+    implementation "androidx.camera:camera-camera2:${camerax_version}"
+    implementation "androidx.camera:camera-lifecycle:${camerax_version}"
+    implementation "androidx.camera:camera-video:${camerax_version}"
 
+    implementation "androidx.camera:camera-view:${camerax_version}"
+    implementation "androidx.camera:camera-extensions:${camerax_version}"
+
+    // Coil
+    implementation "io.coil-kt:coil-compose:2.2.0"
+
+
+    // statistics graph
+    implementation 'com.github.madrapps:plot:0.1.1'
 }

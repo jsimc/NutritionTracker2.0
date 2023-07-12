@@ -52,14 +52,14 @@ fun SaveMealScreen(navController: NavController) {
             Row(
                 modifier = Modifier.padding(10.dp)
             ) {
-                MyText(
+                androidx.compose.material.Text(
                     text = "Naziv jela",
                     style = MaterialTheme.typography.h1
                 )
             }
         }
         item {
-            MyText(text = "kcal", modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
+            androidx.compose.material.Text(text = "kcal", modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
         }
         item {
             Image(
@@ -80,10 +80,10 @@ fun SaveMealScreen(navController: NavController) {
                     Button(onClick = {
                         showSnackbar()
                     }, modifier = Modifier.padding()) {
-                        Text (text="Save")
+                        androidx.compose.material.Text (text="Save")
                     }
                     Button(onClick = {navController.popBackStack()}) {
-                        Text(text="Cancel")
+                        androidx.compose.material.Text(text="Cancel")
                     }
 
             }
@@ -148,7 +148,7 @@ fun ChooseTimeOfDay() {
                     selected = (text == selectedOption),
                     onClick = { Toast.makeText(context, text, Toast.LENGTH_SHORT).show() } // null recommended for accessibility with screenreaders
                 )
-                Text(
+                androidx.compose.material.Text(
                     text = text,
                     style = MaterialTheme.typography.body1.merge(),
                     modifier = Modifier.padding(start = 16.dp)

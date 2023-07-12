@@ -36,7 +36,7 @@ fun MySplashScreen(navController: NavController) {
                 painter = painterResource(R.drawable.baza_sharp_108x108),
                 contentDescription = "Image"
             )
-           Text (text = "splash screen")
+            Text (text = "splash screen")
         }
     }
 }

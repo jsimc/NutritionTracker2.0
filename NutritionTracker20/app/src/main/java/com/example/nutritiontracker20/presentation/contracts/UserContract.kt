@@ -10,10 +10,11 @@ interface UserContract {
         val tmp: LiveData<User>
         val loggedUser: LiveData<User>
         val suggestedKcal: LiveData<Int>
+        val flagIsLoggedIn: LiveData<Boolean>
 //        val username: LiveData<String>
 
         // hocemo li ostale informacije o korisniku da vadimo iz baze ili isto da ih imamo ovako u view modelu?
-        suspend fun checkForUser(username:String, password: String)
+        fun checkForUser(username:String, password: String)
 //        suspend fun setLoggedIn(b: Boolean/**, user: User*/)
 
         fun changeTmp(newTmp: User)

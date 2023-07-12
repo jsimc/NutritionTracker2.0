@@ -1,15 +1,11 @@
 package com.example.nutritiontracker20.presentation.composeUI.screens
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.nutritiontracker20.presentation.composeUI.elements.KategorijaListView
@@ -29,8 +25,8 @@ fun HomePage(mealViewModel: MealContract.ViewModel, navController: NavController
 //        TextField (modifier = Modifier.fillMaxWidth(), value = "",
 //                onValueChange = {mealViewModel.search(it)})
         Row (horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-            Button (onClick = {}) {Text (text = "filter")}
-            Button (onClick = {}) {Text (text = "sort")}
+            Button (onClick = {}) { androidx.compose.material.Text (text = "filter") }
+            Button (onClick = {}) { androidx.compose.material.Text (text = "sort") }
         }
         LazyColumn(modifier = Modifier.padding(14.dp),
             horizontalAlignment = Alignment.End, // End

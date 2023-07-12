@@ -10,13 +10,11 @@ import com.example.nutritiontracker20.presentation.contracts.MealContract
 
 class MealViewModel(private val DBMealRepository: DBMealRepository
 ) : ViewModel(), MealContract.ViewModel {
-    override val meals: LiveData<List<JMeal>>
-        get() = TODO("Not yet implemented")
-    override val JMeal: LiveData<JMeal>
-        get() = TODO("Not yet implemented")
+    override val meals: MutableLiveData<List<JMeal>> = MutableLiveData()
+    override val JMeal: MutableLiveData<JMeal> = MutableLiveData()
 
     override fun getMeals() {
-        TODO("Not yet implemented")
+
     }
 
     override fun getMealByName(name: String) {
@@ -57,6 +55,5 @@ class MealViewModel(private val DBMealRepository: DBMealRepository
     }
 
     override fun setKategorija() {
-        TODO("Not yet implemented")
     }
 }

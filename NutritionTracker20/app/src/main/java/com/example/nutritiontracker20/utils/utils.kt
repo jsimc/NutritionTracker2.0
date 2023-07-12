@@ -1,5 +1,11 @@
 package com.example.nutritiontracker20.utils
 
+import com.example.nutritiontracker20.data.entities.SavedMealsEntity
+import com.example.nutritiontracker20.data.models.User
+import java.time.Instant
+import java.time.LocalDate
+import java.util.*
+
 const val HOME_PAGE = "home_page"
 const val SPLASH_SCREEN = "splash_screen"
 const val MEALS_PAGE = "meals_page"
@@ -20,3 +26,8 @@ const val DEFAULT_HEIGHT = 150
 const val DEFAULT_WEIGHT = 7
 val DEFAULT_GENDER = eGender.FEMALE
 val DEFAULT_WEEKLY_ACTIVITY = eActivity.ThreeOrFourTimes
+//------------------------------------------------------
+//var CAMERA_PERMISSION = true
+val SAVED_MEALS = listOf<SavedMealsEntity>(
+    SavedMealsEntity(0L, "nata", "jelo1", 120, "", "", "", "", "", "",
+        Date.from(Instant.now())))

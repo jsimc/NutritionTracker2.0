@@ -24,6 +24,7 @@ fun RootNavigationGraph(
         startDestination = INTRO_GRAPH, //INTRO_GRAPH
         modifier = Modifier.padding(paddingValues)
     ) {
+        println("root nav graph")
         introGraph(navController = navController, userViewModel = userViewModel)
         mainGraph(navController = navController, mealViewModel = mealViewModel, userViewModel = userViewModel)
     }

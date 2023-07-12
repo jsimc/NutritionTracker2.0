@@ -1,5 +1,9 @@
 package com.example.nutritiontracker20.presentation.composeUI.screens
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,7 +11,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,6 +29,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.compose.rememberImagePainter
 import com.example.nutritiontracker20.presentation.composeUI.theme.DrugaGlavnaBoja
 import com.example.nutritiontracker20.presentation.composeUI.theme.GlavnaBoja
 import com.example.nutritiontracker20.R
@@ -32,6 +38,16 @@ import com.example.nutritiontracker20.utils.SAVE_MEAL_SCREEN
 
 @Composable
 fun MealDetailPage (navController: NavController) {
+    var selectedImageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+
+    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { selectedImageUri = it }
+    )
+
+
     LazyColumn(
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -45,7 +61,7 @@ fun MealDetailPage (navController: NavController) {
                 modifier = Modifier.padding(10.dp)
             ) {
                 Spacer(modifier = Modifier.weight(0.5f))
-                MyText(
+                Text(
                     text = "Naziv jela",
                     modifier = Modifier.weight(0.8f),
                     style = MaterialTheme.typography.h1
@@ -58,27 +74,44 @@ fun MealDetailPage (navController: NavController) {
             }
         }
         item {
-            MyText(text = "kcal", modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
+            Text(text = "kcal", modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
         }
         item {
-            MyText(
+            Text(
                 text = "Kategorija",
                 style = MaterialTheme.typography.h2,
                 modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
             )
         }
         item {
-            MyText(
+            Text(
                 text = "Oblast",
                 style = MaterialTheme.typography.h2,
                 modifier = Modifier.padding(top = 5.dp, bottom = 10.dp)
             )
         }
         item {
-            Image(
-                painter = painterResource(id = R.drawable.hamburger),
-                contentDescription = "foodies"
-            )
+            if (selectedImageUri == null) {
+                Image(
+                    painter = painterResource(id = R.drawable.hamburger),
+                    contentDescription = "foodies",
+                    modifier = Modifier.clickable {
+                        singlePhotoPickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    }
+                )
+            } else {
+                AsyncImage(
+                    model = selectedImageUri,
+                    contentDescription = "foodies",
+                    modifier = Modifier.clickable {
+                        singlePhotoPickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    }
+                )
+            }
         }
 
         items(7) {
@@ -88,15 +121,19 @@ fun MealDetailPage (navController: NavController) {
         }
 
         item {
-            MyText(text = "Recipe")
+            Text(text = "Recipe")
         }
         item {
             LazyRow() {
                 items(3) {
                     //jel su tagovi klikabilni ?
-                    Text(text = "tag$it",
-                        modifier = Modifier.padding(start = 5.dp, end = 5.dp, bottom = 5.dp, top = 8.dp)
-                                        .background(Brush.linearGradient(listOf( GlavnaBoja, DrugaGlavnaBoja)), MaterialTheme.shapes.small)
+                    androidx.compose.material.Text(text = "tag$it",
+                        modifier = Modifier
+                            .padding(start = 5.dp, end = 5.dp, bottom = 5.dp, top = 8.dp)
+                            .background(
+                                Brush.linearGradient(listOf(GlavnaBoja, DrugaGlavnaBoja)),
+                                MaterialTheme.shapes.small
+                            )
                     )
                 }
             }
@@ -114,13 +151,13 @@ fun IngredientListView(name: String = "Name: not available", kcal: String = "Kca
         modifier = Modifier
             .padding(5.dp)
             .clip(MaterialTheme.shapes.medium)
-            .background(Brush.linearGradient(listOf( GlavnaBoja, DrugaGlavnaBoja)))
+            .background(Brush.linearGradient(listOf(GlavnaBoja, DrugaGlavnaBoja)))
             .fillMaxWidth()
-            .clickable(true) {onClick()}
+            .clickable(true) { onClick() }
     ) {
         // mozda mini slika sastojka?
-        Text (text = name, modifier = Modifier.padding(15.dp))
-        Text (text = kcal, modifier = Modifier.padding(15.dp))
+        androidx.compose.material.Text (text = name, modifier = Modifier.padding(15.dp))
+        androidx.compose.material.Text (text = kcal, modifier = Modifier.padding(15.dp))
     }
 }
 
