@@ -8,6 +8,6 @@ data class Meal(
     val strArea: String,
     val strInstructions: String, //veliki string
     val strMealThumb: String, //url slike
-    val strTags: String
-) {
-}
+    val strTags: String,
+    val strYoutube: String // link za video
+)

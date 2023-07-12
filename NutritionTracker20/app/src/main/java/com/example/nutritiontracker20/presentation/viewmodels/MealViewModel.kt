@@ -4,10 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.nutritiontracker20.data.models.domain.JMeal
-import com.example.nutritiontracker20.data.repositories.MealRepository
+import com.example.nutritiontracker20.data.repositories.DBMealRepository
+import com.example.nutritiontracker20.data.repositories.JMealRepository
 import com.example.nutritiontracker20.presentation.contracts.MealContract
 
-class MealViewModel(private val mealRepository: MealRepository
+class MealViewModel(private val DBMealRepository: DBMealRepository
 ) : ViewModel(), MealContract.ViewModel {
     override val meals: LiveData<List<JMeal>>
         get() = TODO("Not yet implemented")
@@ -18,11 +19,25 @@ class MealViewModel(private val mealRepository: MealRepository
         TODO("Not yet implemented")
     }
 
-    override fun getMealById(id: String) {
+    override fun getMealByName(name: String) {
         TODO("Not yet implemented")
     }
 
+    override fun getMealsByFirstLetter(letter: Char) {
+        TODO("Not yet implemented")
+    }
 
+    override fun filterMealsByCategory(category: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun filterMealsByArea(area: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun filterMealsByIngredient(ingredient: String) {
+        TODO("Not yet implemented")
+    }
 
     override val chosenCategory: MutableLiveData<Any> = MutableLiveData()
 

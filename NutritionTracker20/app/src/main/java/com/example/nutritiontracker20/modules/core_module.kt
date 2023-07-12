@@ -71,5 +71,9 @@ fun createOkHttpClient(): OkHttpClient {
     }
 
     return httpClient.build()
-}
 
+
+}
+inline fun <reified T> create(retrofit: Retrofit): T  {
+    return retrofit.create<T>(T::class.java)
+}

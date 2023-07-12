@@ -1,7 +1,9 @@
 package com.example.nutritiontracker20.presentation.contracts
 
 import androidx.lifecycle.LiveData
+import com.example.nutritiontracker20.data.models.Meal
 import com.example.nutritiontracker20.data.models.domain.JMeal
+import io.reactivex.Observable
 
 interface MealContract {
     interface ViewModel {
@@ -9,8 +11,11 @@ interface MealContract {
         val meals: LiveData<List<JMeal>>
         val JMeal: LiveData<JMeal>
         fun getMeals()
-        fun getMealById(id: String)
-
+        fun getMealByName(name: String)
+        fun getMealsByFirstLetter(letter: Char)
+        fun filterMealsByCategory(category: String)
+        fun filterMealsByArea(area: String)
+        fun filterMealsByIngredient(ingredient: String)
 
         //promene potrebne ali neka stoji ovako chosenCategory da se ne bi crvenilo
         val chosenCategory: LiveData<Any>

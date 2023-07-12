@@ -5,7 +5,7 @@ import io.reactivex.Observable
 import com.example.nutritiontracker20.data.datasources.daos.SavedMealDao
 import com.example.nutritiontracker20.data.entities.SavedMealsEntity
 
-class MealRepositoryImpl(private val savedMealDao: SavedMealDao) : MealRepository {
+class DBMealRepositoryImpl(private val savedMealDao: SavedMealDao) : DBMealRepository {
     override fun insertMeal(savedMealsEntity: SavedMealsEntity): Completable {
         return savedMealDao.insertMeal(savedMealsEntity)
     }

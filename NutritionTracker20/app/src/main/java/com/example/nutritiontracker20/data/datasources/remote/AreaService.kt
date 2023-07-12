@@ -1,6 +1,6 @@
 package com.example.nutritiontracker20.data.datasources.remote
 
-import android.database.Observable
+import io.reactivex.Observable
 import com.example.nutritiontracker20.data.models.domain.JMeal
 import retrofit2.http.GET
 
