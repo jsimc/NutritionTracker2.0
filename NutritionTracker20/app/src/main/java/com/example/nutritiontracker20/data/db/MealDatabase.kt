@@ -8,7 +8,6 @@ import com.example.nutritiontracker20.data.datasources.daos.IngredientInMealDao
 import com.example.nutritiontracker20.data.datasources.daos.SavedMealDao
 import com.example.nutritiontracker20.data.datasources.daos.UserDao
 import com.example.nutritiontracker20.data.db.converters.DateConverter
-import com.example.nutritiontracker20.data.db.converters.JCategoryJsonAdapter
 import com.example.nutritiontracker20.data.entities.IngredientInMealEntity
 import com.example.nutritiontracker20.data.entities.IngredientsEntity
 import com.example.nutritiontracker20.data.entities.SavedMealsEntity
