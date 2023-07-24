@@ -7,8 +7,12 @@ import androidx.room.Room
 import com.example.nutritiontracker20.BuildConfig
 import com.example.nutritiontracker20.data.db.MealDatabase
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -36,7 +40,7 @@ val coreModule = module {
     //single<Moshi> { Moshi.Builder().build() }
 
     //sta je ovo?
-    single<OkHttpClient> { OkHttpClient.Builder().build() }
+//    single<OkHttpClient> { OkHttpClient.Builder().build() }
 
 }
 
@@ -44,13 +48,14 @@ val coreModule = module {
 fun createMoshi(): Moshi {
     return Moshi.Builder()
         .add(Data::class.java, Rfc3339DateJsonAdapter())
+        .add(KotlinJsonAdapterFactory())
         .build()
 }
 // ovo ce morati drugacije jer vucemo podatke sa dva apija
 fun createRetrofit(moshi: Moshi,
                    httpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
-        .baseUrl("www.themealdb.com/api/json/v1/1/")
+        .baseUrl("https://www.themealdb.com/api/json/v1/1/")
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
         .client(httpClient)
@@ -63,6 +68,19 @@ fun createOkHttpClient(): OkHttpClient {
     httpClient.readTimeout(60, TimeUnit.SECONDS)
     httpClient.connectTimeout(60, TimeUnit.SECONDS)
     httpClient.writeTimeout(60, TimeUnit.SECONDS)
+    httpClient.addInterceptor { chain ->
+        //return response
+        chain.proceed(
+            //create request
+            chain.request()
+                .newBuilder()
+                //add headers to the request builder
+                .also {
+                    it.addHeader("Authorization", "1")
+                }
+                .build()
+        )
+    }
 
     if (BuildConfig.DEBUG) {
         val logging = HttpLoggingInterceptor()

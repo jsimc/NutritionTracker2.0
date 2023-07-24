@@ -8,6 +8,7 @@ import com.example.nutritiontracker20.data.datasources.daos.IngredientInMealDao
 import com.example.nutritiontracker20.data.datasources.daos.SavedMealDao
 import com.example.nutritiontracker20.data.datasources.daos.UserDao
 import com.example.nutritiontracker20.data.db.converters.DateConverter
+import com.example.nutritiontracker20.data.db.converters.JCategoryJsonAdapter
 import com.example.nutritiontracker20.data.entities.IngredientInMealEntity
 import com.example.nutritiontracker20.data.entities.IngredientsEntity
 import com.example.nutritiontracker20.data.entities.SavedMealsEntity
@@ -17,7 +18,7 @@ import com.example.nutritiontracker20.data.entities.UserEntity
 //IngredientEntityTmp::class
 @Database(
     entities = [UserEntity::class, SavedMealsEntity::class, IngredientsEntity::class, IngredientInMealEntity::class],
-    version = 3, //OBAVEZNO KAD SE MENJA STRUKTURA BAZE MORA DA SE PROMENI VERZIJA SVAKI PUT PRE POKRETANJA PROJEKTA (praksa version += 1)
+    version = 5, //OBAVEZNO KAD SE MENJA STRUKTURA BAZE MORA DA SE PROMENI VERZIJA SVAKI PUT PRE POKRETANJA PROJEKTA (praksa version += 1)
     exportSchema = false
 )
 //ovde konvertujemo komleksne u jednostavne tipove da bi se cuvali lepo u bazi - npr datum

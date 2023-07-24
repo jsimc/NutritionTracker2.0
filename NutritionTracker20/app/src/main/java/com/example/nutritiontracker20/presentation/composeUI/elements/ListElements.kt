@@ -10,20 +10,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import com.example.nutritiontracker20.data.models.Category
+import com.example.nutritiontracker20.data.models.Meal
 import com.example.nutritiontracker20.presentation.contracts.MealContract
 import com.example.nutritiontracker20.utils.MEALS_PAGE
 import com.example.nutritiontracker20.utils.MEAL_DETAIL_PAGE
 
 @Composable
-fun KategorijaListView(mealViewModel: MealContract.ViewModel, navController: NavController, num: Int, onClick: (String) -> Unit) {
+fun KategorijaListView(navController: NavController, category: Category, onClick: () -> Unit) {
     Surface(modifier = Modifier
         .padding(5.dp)
         .fillMaxSize()
-        .clickable(true) {
-            // mozda da u mealViewModel imamo jedan chosenKategorija
-            // kako bismo znali sta da prikazemo u sledecem skrinu
-            // TODO on je klikabilni element
-            onClick(mealViewModel.chosenCategory.value.toString())
+        .clickable {
+            onClick()
             navController.navigate(MEALS_PAGE)
         }
         .clip(MaterialTheme.shapes.medium)
@@ -32,17 +32,16 @@ fun KategorijaListView(mealViewModel: MealContract.ViewModel, navController: Nav
             .padding(8.dp)
             .fillMaxSize()) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(text = "Kategorija".plus(num))
-                //mealViewModel . getCategory.getInfo ?
-                MyPopup(mealViewModel)
+                Text(text = category.strCategory)
+                MyPopup(info = category.strCategoryDescription)
             }
-            Text(text = "slika")
+            AsyncImage(model = category.strCategoryThumb, contentDescription = "picture")
         }
     }
 }
 
 @Composable
-fun MyPopup (mealViewModel: MealContract.ViewModel) {
+fun MyPopup (info: String) {
 
     var expanded by remember { mutableStateOf(false) }
 
@@ -56,21 +55,22 @@ fun MyPopup (mealViewModel: MealContract.ViewModel) {
             modifier = Modifier.padding(10.dp)
         ) {
             // mealViewModel.
-            Text (text = "INFOOOO")
+            Text (text = info)
         }
     }
 }
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Composable
-fun MealListView(mealViewModel: MealContract.ViewModel, navController: NavController, num: Int) {
+fun MealListView(mealViewModel: MealContract.ViewModel, navController: NavController, meal: Meal, onClick: () -> Unit) {
     Surface(modifier = Modifier
         .padding(5.dp)
-        .fillMaxSize().clickable(true) {
-        // mozda da u mealViewModel imamo jedan chosenKategorija
-        // kako bismo znali sta da prikazemo u sledecem skrinu
-        // TODO
-        //  onClick
-            if(/*mealViewModel.isCreatePlanRegime()*/true) {
+        .fillMaxSize()
+        .clickable {
+            // mozda da u mealViewModel imamo jedan chosenKategorija
+            // kako bismo znali sta da prikazemo u sledecem skrinu
+            // TODO
+            //  onClick
+            if (/*mealViewModel.isCreatePlanRegime()*/true) {
                 // TODO onda se ne navigira na MEAL_DETAIL_PAGE vec se vraca na
                 //  createPlanScreen I dodaje plan za dan koji je bio kliknut, moramo smisliti kako proslediti taj dan
                 //  vrv isto preko mealViewModela.
@@ -80,16 +80,18 @@ fun MealListView(mealViewModel: MealContract.ViewModel, navController: NavContro
 //                    }
 //                }
             }
-        navController.navigate(MEAL_DETAIL_PAGE)
-    }.clip(MaterialTheme.shapes.medium)
+            onClick()
+            navController.navigate(MEAL_DETAIL_PAGE)
+        }
+        .clip(MaterialTheme.shapes.medium)
     ) {
         Column(modifier = Modifier
             .padding(8.dp)
             .fillMaxSize()) {
-            Text(text = "Jelo".plus(num))
+            Text(text = meal.strMeal)
                 // mealViewModel.getMeal.getInfo --> onda MyPopup ne mora da prima mealViewModel
-//                MyPopup(mealViewModel)
-            Text(text = "slika")
+//            MyPopup(info = meal.strInstructions)
+            AsyncImage(model = meal.strMealThumb, contentDescription = "slika")
         }
     }
 }

@@ -17,7 +17,7 @@ fun NavGraphBuilder.mainGraph(navController: NavController, mealViewModel: MealC
             MealsPage(mealViewModel = mealViewModel, navController = navController)
         }
         composable(route = MEAL_DETAIL_PAGE) {
-            MealDetailPage(navController = navController)
+            MealDetailPage(mealViewModel = mealViewModel, navController = navController)
         }
         composable(route = SAVE_MEAL_SCREEN) {
             SaveMealScreen(navController = navController)
