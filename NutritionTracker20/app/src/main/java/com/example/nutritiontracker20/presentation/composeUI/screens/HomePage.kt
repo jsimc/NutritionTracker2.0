@@ -11,28 +11,44 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.nutritiontracker20.data.models.Resource
 import com.example.nutritiontracker20.data.models.states.CategoriesState
-import com.example.nutritiontracker20.presentation.composeUI.elements.KategorijaListView
-import com.example.nutritiontracker20.presentation.composeUI.elements.MyDropDownMenu
-import com.example.nutritiontracker20.presentation.composeUI.elements.SearchBar
+import com.example.nutritiontracker20.presentation.composeUI.elements.*
 import com.example.nutritiontracker20.presentation.contracts.MealContract
+import com.example.nutritiontracker20.utils.AREA
+import com.example.nutritiontracker20.utils.CATEGORY
+import com.example.nutritiontracker20.utils.INGREDIENT
 
 @Composable
 fun HomePage(mealViewModel: MealContract.ViewModel, navController: NavController) { //DI mealViewModel u pocetni ekran, HomePage nam je kao pocetni ekran
-    val listItems = listOf("Kategorija", "Oblast", "Sastojci")
+    val listItems = listOf(CATEGORY, AREA, INGREDIENT)
+    val topAppBarSelectedItem = remember { mutableStateOf(listItems[0]) }
+
     val categoriesState = mealViewModel.categoriesState.observeAsState(CategoriesState.Loading)
+    val areasState = mealViewModel.areasState.observeAsState(Resource.Loading())
+    val ingredientsState = mealViewModel.ingredientsState.observeAsState(Resource.Loading())
 
     Column {
         TopAppBar {
             //TODO ovde mozemo da ubacimo npr dugme gde mozemo videti sve favorite
-            MyDropDownMenu(listItems = listItems, onClick = {}, modifier = Modifier.fillMaxWidth())
+            MyDropDownMenu(
+                listItems = listItems,
+                modifier = Modifier.fillMaxWidth(),
+                selectedOption = topAppBarSelectedItem as MutableState<Any>
+            ) { selectedOption ->
+                myLambdaFunForDropDownMenu(
+                    selectedOption as String,
+                    listItems,
+                    mealViewModel
+                ) // ovo je sve samo da ne bismo prosledjivali mealViewModel
+            }
         }
         SearchBar(onSearch = {mealViewModel.searchCategory(it)})
 //        TextField (modifier = Modifier.fillMaxWidth(), value = "",
 //                onValueChange = {mealViewModel.search(it)})
         Row (horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-            Button (onClick = {}) { androidx.compose.material.Text (text = "filter") }
-            Button (onClick = {}) { androidx.compose.material.Text (text = "sort") }
+            Button (onClick = {}) { Text (text = "filter") }
+            Button (onClick = {}) { Text (text = "sort") }
         }
         LazyColumn(modifier = Modifier
             .padding(14.dp)
@@ -41,22 +57,52 @@ fun HomePage(mealViewModel: MealContract.ViewModel, navController: NavController
             verticalArrangement = Arrangement.Center)
         {
             item{
-                when (categoriesState.value) {
-                    is CategoriesState.Loading -> { CircularProgressIndicator() }
-                    is CategoriesState.Success -> {
-                        for (category in (categoriesState.value as CategoriesState.Success).categories) {
-                            KategorijaListView(
-                                navController = navController,
-                                category = category,
-                                onClick = {mealViewModel.setKategorija(category)}
-                            )
+                if(topAppBarSelectedItem.value == CATEGORY) {
+                    when (categoriesState.value) {
+                        is CategoriesState.Loading -> { CircularProgressIndicator() }
+                        is CategoriesState.Error -> {
+                            Toast.makeText(LocalContext.current, (categoriesState.value as CategoriesState.Error).message, Toast.LENGTH_SHORT).show()
+                        }
+                        is CategoriesState.Success -> {
+                            for (category in (categoriesState.value as CategoriesState.Success).categories) {
+                                KategorijaListView(
+                                    navController = navController,
+                                    category = category,
+                                    onClick = {mealViewModel.setKategorija(category)}
+                                )
+                            }
+                        }
+                        else -> {
+                            Toast.makeText(LocalContext.current, "Error: ${categoriesState.value}", Toast.LENGTH_SHORT).show()
                         }
                     }
-                    is CategoriesState.Error -> {
-                        Toast.makeText(LocalContext.current, (categoriesState.value as CategoriesState.Error).message, Toast.LENGTH_SHORT).show()
+                } else if(topAppBarSelectedItem.value == AREA) {
+                    when (areasState.value) {
+                        is Resource.Loading -> { CircularProgressIndicator() }
+                        is Resource.Error -> { Toast.makeText(LocalContext.current, (areasState.value as Resource.Error).error.message, Toast.LENGTH_SHORT).show()  }
+                        is Resource.Success -> {
+                            for (area in (areasState.value as Resource.Success).data) {
+                                AreaListView(
+                                    navController = navController,
+                                    area = area,
+                                    onClick = {mealViewModel.setArea(area)}
+                                )
+                            }
+                        }
                     }
-                    else -> {
-                        Toast.makeText(LocalContext.current, "Error: ${categoriesState.value}", Toast.LENGTH_SHORT).show()
+                } else if (topAppBarSelectedItem.value == INGREDIENT) {
+                    when (ingredientsState.value) {
+                        is Resource.Loading -> { CircularProgressIndicator() }
+                        is Resource.Error -> { Toast.makeText(LocalContext.current, (ingredientsState.value as Resource.Error).error.message, Toast.LENGTH_SHORT).show()  }
+                        is Resource.Success -> {
+                            for (ingredient in (ingredientsState.value as Resource.Success).data) {
+                                JIngredientListView(
+                                    navController = navController,
+                                    ingredient = ingredient,
+                                    onClick = {mealViewModel.setIngredient(ingredient)}
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -65,3 +111,34 @@ fun HomePage(mealViewModel: MealContract.ViewModel, navController: NavController
     }
 }
 
+fun myLambdaFunForDropDownMenu(selectedOption: String, listItems: List<String> = listOf("Kategorija", "Oblast", "Sastojci"), mealViewModel: MealContract.ViewModel) {
+    if (selectedOption == listItems[0]) {
+        mealViewModel.getCategories()
+    } else if (selectedOption == listItems[1]) {
+        mealViewModel.getAreas()
+
+    } else if (selectedOption == listItems[2]) {
+        mealViewModel.getIngredients()
+    }
+}
+
+//fun ShowChosenItems(selectedOption: String) {
+//    when (categoriesState.value) {
+//        is CategoriesState.Loading -> { CircularProgressIndicator() }
+//        is CategoriesState.Success -> {
+//            for (category in (categoriesState.value as CategoriesState.Success).categories) {
+//                KategorijaListView(
+//                    navController = navController,
+//                    category = category,
+//                    onClick = {mealViewModel.setKategorija(category)}
+//                )
+//            }
+//        }
+//        is CategoriesState.Error -> {
+//            Toast.makeText(LocalContext.current, (categoriesState.value as CategoriesState.Error).message, Toast.LENGTH_SHORT).show()
+//        }
+//        else -> {
+//            Toast.makeText(LocalContext.current, "Error: ${categoriesState.value}", Toast.LENGTH_SHORT).show()
+//        }
+//    }
+//}

@@ -71,6 +71,8 @@ dependencies {
     // Rx --prolazi
     implementation "io.reactivex.rxjava2:rxjava:2.2.9"
     implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
+    // paging
+    implementation "androidx.paging:paging-rxjava2:3.2.0"
 
     // Retrofit --prolazi
     def retrofitVersion = '2.9.0'
@@ -118,8 +120,11 @@ dependencies {
     implementation 'androidx.compose.runtime:runtime-rxjava2'
     // optional - RxJava3 support for Room
 //    implementation "androidx.room:room-rxjava3:$room_version"
-    // optional - Paging 3 Integration
-    implementation "androidx.room:room-paging:$roomVersion"
+
+    // Paging (3) Integration
+    implementation("androidx.paging:paging-runtime:3.2.0")
+//    implementation "androidx.room:room-paging:3.2.0"
+    implementation "androidx.paging:paging-compose:3.2.0"
 
     // splash screen implementation
     implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
@@ -144,7 +149,6 @@ dependencies {
 
     // Coil
     implementation "io.coil-kt:coil-compose:2.2.0"
-
 
     // statistics graph
     implementation 'com.github.madrapps:plot:0.1.1'

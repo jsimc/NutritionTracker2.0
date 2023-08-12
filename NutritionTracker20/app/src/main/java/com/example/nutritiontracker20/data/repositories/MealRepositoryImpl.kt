@@ -31,14 +31,14 @@ class MealRepositoryImpl(
             .map {
                 it.allMeals.map { jMeal: JMeal ->
                     Meal(
-                        idMeal = jMeal.idMeal,
-                        strMeal = jMeal.strMeal,
-                        strCategory =  jMeal.strCategory,
-                        strArea = jMeal.strArea,
-                        strInstructions = jMeal.strInstructions,
-                        strMealThumb = jMeal.strMealThumb,
+                        idMeal = jMeal.idMeal!!,
+                        strMeal = jMeal.strMeal!!,
+                        strCategory =  jMeal.strCategory!!,
+                        strArea = jMeal.strArea!!,
+                        strInstructions = jMeal.strInstructions!!,
+                        strMealThumb = jMeal.strMealThumb!!,
                         strTags = jMeal.strTags ?: "",
-                        strYoutube = jMeal.strYoutube
+                        strYoutube = jMeal.strYoutube!!
                     )
 
 
@@ -86,14 +86,14 @@ class MealRepositoryImpl(
                 println(ingredientsMap)
 
                     Meal(
-                        idMeal = jMeal.idMeal,
-                        strMeal = jMeal.strMeal,
-                        strCategory =  jMeal.strCategory,
-                        strArea = jMeal.strArea,
-                        strInstructions = jMeal.strInstructions,
-                        strMealThumb = jMeal.strMealThumb,
+                        idMeal = jMeal.idMeal!!,
+                        strMeal = jMeal.strMeal!!,
+                        strCategory =  jMeal.strCategory!!,
+                        strArea = jMeal.strArea!!,
+                        strInstructions = jMeal.strInstructions!!,
+                        strMealThumb = jMeal.strMealThumb!!,
                         strTags = jMeal.strTags ?: "",
-                        strYoutube = jMeal.strYoutube,
+                        strYoutube = jMeal.strYoutube!!,
                         ingredients = ingredientsMap
                     )
                 }.first()
@@ -105,14 +105,14 @@ class MealRepositoryImpl(
             .getMealByName(name)
             .map{jMeal->
                 Meal(
-                    idMeal = jMeal.idMeal,
-                    strMeal = jMeal.strMeal,
-                    strCategory =  jMeal.strCategory,
-                    strArea = jMeal.strArea,
-                    strInstructions = jMeal.strInstructions,
-                    strMealThumb = jMeal.strMealThumb,
+                    idMeal = jMeal.idMeal!!,
+                    strMeal = jMeal.strMeal!!,
+                    strCategory =  jMeal.strCategory!!,
+                    strArea = jMeal.strArea!!,
+                    strInstructions = jMeal.strInstructions!!,
+                    strMealThumb = jMeal.strMealThumb!!,
                     strTags = jMeal.strTags ?: "",
-                    strYoutube = jMeal.strYoutube
+                    strYoutube = jMeal.strYoutube!!
 
                 )
 
@@ -126,14 +126,14 @@ class MealRepositoryImpl(
             .map{
                 it.allMeals.map { jMeal ->
                     Meal(
-                        idMeal = jMeal.idMeal,
-                        strMeal = jMeal.strMeal,
-                        strCategory = jMeal.strCategory,
-                        strArea = jMeal.strArea,
-                        strInstructions = jMeal.strInstructions,
-                        strMealThumb = jMeal.strMealThumb,
+                        idMeal = jMeal.idMeal!!,
+                        strMeal = jMeal.strMeal!!,
+                        strCategory = jMeal.strCategory!!,
+                        strArea = jMeal.strArea!!,
+                        strInstructions = jMeal.strInstructions!!,
+                        strMealThumb = jMeal.strMealThumb!!,
                         strTags = jMeal.strTags ?: "",
-                        strYoutube = jMeal.strYoutube
+                        strYoutube = jMeal.strYoutube!!
                     )
                 }
             }
@@ -160,14 +160,9 @@ class MealRepositoryImpl(
             .map{
                 it.allMeals.map{jMeal->
                     Meal(
-                        idMeal = jMeal.idMeal,
-                        strMeal = jMeal.strMeal,
-                        strCategory = jMeal.strCategory,
-                        strArea = jMeal.strArea,
-                        strInstructions = jMeal.strInstructions,
-                        strMealThumb = jMeal.strMealThumb,
-                        strTags = jMeal.strTags ?: "",
-                        strYoutube = jMeal.strYoutube
+                        idMeal = jMeal.idMeal!!,
+                        strMeal = jMeal.strMeal!!,
+                        strMealThumb = jMeal.strMealThumb!!
                     )
 
                 }
@@ -180,14 +175,9 @@ class MealRepositoryImpl(
             .map{
                 it.allMeals.map{jMeal->
                     Meal(
-                        idMeal = jMeal.idMeal,
-                        strMeal = jMeal.strMeal,
-                        strCategory = jMeal.strCategory,
-                        strArea = jMeal.strArea,
-                        strInstructions = jMeal.strInstructions,
-                        strMealThumb = jMeal.strMealThumb,
-                        strTags = jMeal.strTags ?: "",
-                        strYoutube = jMeal.strYoutube
+                        idMeal = jMeal.idMeal!!,
+                        strMeal = jMeal.strMeal!!,
+                        strMealThumb = jMeal.strMealThumb!!
                     )
 
                 }

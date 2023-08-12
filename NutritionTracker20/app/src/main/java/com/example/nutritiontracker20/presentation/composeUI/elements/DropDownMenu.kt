@@ -1,7 +1,6 @@
 package com.example.nutritiontracker20.presentation.composeUI.elements
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -11,7 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 //Da se prosledjuje i modifier!
-fun MyDropDownMenu(listItems: List<Any>, modifier: Modifier, firstSelected: Int = 0, onClick: (Any?) -> Unit) {
+fun MyDropDownMenu(listItems: List<Any>, modifier: Modifier, firstSelected: Int = 0, selectedOption: MutableState<Any> = mutableStateOf(listItems[firstSelected]), onClick: (Any?) -> Unit) {
 //    val listItems = arrayOf("Kategorija", "Oblast", "Sastojci")
     val contextForToast = LocalContext.current.applicationContext
     // state of the menu
@@ -20,9 +19,9 @@ fun MyDropDownMenu(listItems: List<Any>, modifier: Modifier, firstSelected: Int 
     }
 
     // remember the selected item
-    var selectedItem by remember {
-        mutableStateOf(listItems[firstSelected]?:listItems[0])
-    }
+//    var selectedItem by remember {
+//        mutableStateOf(listItems[firstSelected]?:listItems[0])
+//    }
 
     // box
     ExposedDropdownMenuBox(
@@ -37,7 +36,7 @@ fun MyDropDownMenu(listItems: List<Any>, modifier: Modifier, firstSelected: Int 
         TextField(
             modifier = modifier,
 //            modifier = Modifier.fillMaxWidth(),
-            value = selectedItem.toString(),
+            value = selectedOption.value.toString(),
             onValueChange = {},
             readOnly = true,
             colors = ExposedDropdownMenuDefaults.textFieldColors()
@@ -50,16 +49,16 @@ fun MyDropDownMenu(listItems: List<Any>, modifier: Modifier, firstSelected: Int 
         ) {
             // this is a column scope
             // all the items are added vertically
-            listItems.forEach { selectedOption ->
+            listItems.forEach { selectedOptionn ->
                 // menu item
                 DropdownMenuItem(onClick = {
-                    selectedItem = selectedOption
-                    // TODO  JOS nesto se dogadja ovde!?
-                    onClick(selectedOption)
-                    Toast.makeText(contextForToast, selectedOption.toString(), Toast.LENGTH_SHORT).show()
+                    selectedOption.value = selectedOptionn
+                    // TODO  JOS nesto se dogadja ovde!? -- moram da napravim da se lazyColumn menja
+                    onClick(selectedOption.value)
+                    Toast.makeText(contextForToast, selectedOption.value.toString(), Toast.LENGTH_SHORT).show()
                     expanded = false
                 }, modifier = Modifier.clip(MaterialTheme.shapes.medium)) {
-                    Text(text = selectedOption.toString())
+                    Text(text = selectedOptionn.toString())
                 }
             }
         }

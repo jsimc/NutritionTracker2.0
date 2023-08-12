@@ -1,9 +1,7 @@
 package com.example.nutritiontracker20.utils
 
 import com.example.nutritiontracker20.data.entities.SavedMealsEntity
-import com.example.nutritiontracker20.data.models.User
 import java.time.Instant
-import java.time.LocalDate
 import java.util.*
 
 const val HOME_PAGE = "home_page"
@@ -31,3 +29,7 @@ val DEFAULT_WEEKLY_ACTIVITY = eActivity.ThreeOrFourTimes
 val SAVED_MEALS = listOf<SavedMealsEntity>(
     SavedMealsEntity(0L, "nata", "jelo1", 120, "", "", "", "", "", "",
         Date.from(Instant.now())))
+//------------------------------------------------------
+const val CATEGORY = "Categories"
+const val AREA = "Areas"
+const val INGREDIENT = "Ingredients"

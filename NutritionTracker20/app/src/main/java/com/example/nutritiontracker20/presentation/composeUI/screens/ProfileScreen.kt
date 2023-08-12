@@ -176,7 +176,12 @@ fun RowItemDropDown(label: String, listItems: List<Any>, firstSelected: Any?, on
             style = TextStyle(fontSize = 16.sp)
         )
 
-        MyDropDownMenu(listItems = listItems, onClick = onClick, firstSelected = listItems.indexOf(firstSelected), modifier = Modifier.weight(1f))
+        MyDropDownMenu(
+            listItems = listItems,
+            modifier = Modifier.weight(1f),
+            firstSelected = listItems.indexOf(firstSelected),
+            onClick = onClick
+        )
 
     }
 }

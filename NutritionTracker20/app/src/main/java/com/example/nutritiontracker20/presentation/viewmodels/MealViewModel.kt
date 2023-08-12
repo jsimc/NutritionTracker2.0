@@ -3,11 +3,15 @@ package com.example.nutritiontracker20.presentation.viewmodels
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.paging.PagingData
 import com.example.nutritiontracker20.data.models.Category
 import com.example.nutritiontracker20.data.models.Meal
 import com.example.nutritiontracker20.data.models.Resource
+import com.example.nutritiontracker20.data.models.domain.JIngredient
 import com.example.nutritiontracker20.data.models.states.CategoriesState
+import com.example.nutritiontracker20.data.repositories.JAreaRepository
 import com.example.nutritiontracker20.data.repositories.JCategoryRepository
+import com.example.nutritiontracker20.data.repositories.JIngredientRepository
 import com.example.nutritiontracker20.data.repositories.MealRepository
 import com.example.nutritiontracker20.presentation.contracts.MealContract
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -17,7 +21,9 @@ import io.reactivex.subjects.PublishSubject
 
 class MealViewModel(
     private val mealRepository: MealRepository,
-    private val jCategoryRepository: JCategoryRepository
+    private val jCategoryRepository: JCategoryRepository,
+    private val jAreaRepository: JAreaRepository,
+    private val jIngredientRepository: JIngredientRepository
 ) : ViewModel(), MealContract.ViewModel {
     private val subscriptions = CompositeDisposable()
     private val publishSubject: PublishSubject<String> = PublishSubject.create()
@@ -30,9 +36,22 @@ class MealViewModel(
     override val categoriesState: MutableLiveData<CategoriesState> = MutableLiveData()
     override val chosenCategory: MutableLiveData<Category> = MutableLiveData()
 
+    //areas
+    override val areasState: MutableLiveData<Resource<List<String>>> = MutableLiveData()
+    override val chosenArea: MutableLiveData<Resource<String>> = MutableLiveData()
+
+    //ingredients !! malo mi se ne slaze logicki,
+    // jer sad cu da koristim JIngredient jer imamo ingredient u BAZI koji nema istu strukturu kao ovaj sa APIja koji koristimo!
+    override val ingredientsState: MutableLiveData<Resource<List<JIngredient>>> = MutableLiveData()
+    override val chosenIngredient: MutableLiveData<Resource<JIngredient>> = MutableLiveData()
+
     init {
 
         Log.d("mealViewModel", "INIT")
+        getCategories()
+    }
+
+    override fun getCategories() {
         val sub = jCategoryRepository
             .getAllCategories()
             .subscribeOn(Schedulers.io())
@@ -48,6 +67,44 @@ class MealViewModel(
                 }
             )
         // za dobalvjanje kategorija, Oblasti. .. .
+        subscriptions.add(sub)
+    }
+
+    override fun getAreas() {
+        val sub = jAreaRepository
+            .getAllAreas()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    areasState.value = Resource.Success(it)
+                    Log.d("Areas", "GOOD $it")
+                },
+                {
+                    areasState.value = Resource.Error(it, null)
+                    Log.d("Areas", "WRONG $it")
+                }
+            )
+        // za dobavljanje Oblasti
+        subscriptions.add(sub)
+    }
+
+    override fun getIngredients() {
+        val sub = jIngredientRepository
+            .getAllIngredients()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    ingredientsState.value = Resource.Success(it)
+                    Log.d("Ingredients", "GOOD $it")
+                },
+                {
+                    ingredientsState.value = Resource.Error(it, null)
+                    Log.d("Ingredients", "WRONG $it")
+                }
+            )
+        // za dobavljanje Sastojaka
         subscriptions.add(sub)
     }
 
@@ -90,11 +147,11 @@ class MealViewModel(
             .subscribe(
                 { mealList ->
                     mealsState.value = Resource.Success(mealList)
-                    Log.d("Meals", "GOOD MEAL $mealList")
+                    Log.d("Meals", "CATEGORY - GOOD MEAL $mealList")
                 },
                 {
                     mealsState.value = Resource.Error(it,listOf())
-                    Log.d("Meals", "WRONG MEAL $it")
+                    Log.d("Meals", "CATEGORY - WRONG MEAL $it")
                 }
             )
         // za dobalvjanje kategorija, Oblasti. .. .
@@ -102,11 +159,41 @@ class MealViewModel(
     }
 
     override fun filterMealsByArea(area: String) {
-        TODO("Not yet implemented")
+        val sub = mealRepository
+            .filterMealsByArea(area)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { mealList ->
+                    mealsState.value = Resource.Success(mealList)
+                    Log.d("Meals", "AREA - GOOD MEAL $mealList")
+                },
+                {
+                    mealsState.value = Resource.Error(it,listOf())
+                    Log.d("Meals", "AREA - WRONG MEAL $it")
+                }
+            )
+        // za dobalvjanje kategorija, Oblasti. .. .
+        subscriptions.add(sub)
     }
 
     override fun filterMealsByIngredient(ingredient: String) {
-        TODO("Not yet implemented")
+        val sub = mealRepository
+            .filterMealsByIngredient(ingredient)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { mealList ->
+                    mealsState.value = Resource.Success(mealList)
+                    Log.d("Meals", "INGREDIENT - GOOD MEAL $mealList")
+                },
+                {
+                    mealsState.value = Resource.Error(it,listOf())
+                    Log.d("Meals", "INGREDIENT - WRONG MEAL $it")
+                }
+            )
+        // za dobalvjanje kategorija, Oblasti. .. .
+        subscriptions.add(sub)
     }
 
     override fun search(searchBy: String) {
@@ -128,6 +215,13 @@ class MealViewModel(
         chosenCategory.value = category
     }
 
+    override fun setArea(area: String) {
+        chosenArea.value = Resource.Success(area)
+    }
+
+    override fun setIngredient(ingredient: JIngredient) {
+        chosenIngredient.value = Resource.Success(ingredient)
+    }
 
     override fun onCleared() {
         super.onCleared()

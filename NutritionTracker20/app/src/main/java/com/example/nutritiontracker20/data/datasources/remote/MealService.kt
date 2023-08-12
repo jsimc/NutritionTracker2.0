@@ -25,10 +25,10 @@ interface MealService {
     @GET("filter.php")
     fun filterMealsByCategory(@Query("c") category: String): Observable<MealsFromJsonFilterByCategory>
 
-    @GET("filter.php?a={area}")
-    fun filterMealsByArea(@Path("area") area: String): Observable<MealsFromJson>
+    @GET("filter.php")
+    fun filterMealsByArea(@Query("a") area: String): Observable<MealsFromJson>
 
-    @GET("filter.php?i={ingredient}")
-    fun filterMealsByIngredient(@Path("ingredient") ingredient: String): Observable<MealsFromJson>
+    @GET("filter.php")
+    fun filterMealsByIngredient(@Query("i") ingredient: String): Observable<MealsFromJson>
 
 }

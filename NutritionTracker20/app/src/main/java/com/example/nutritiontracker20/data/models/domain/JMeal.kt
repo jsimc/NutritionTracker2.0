@@ -4,15 +4,15 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class JMeal(
-    val idMeal: Int,
-    val strMeal: String,
+    val idMeal: Int?,
+    val strMeal: String?,
     val strDrinkAlternate: String?,
-    val strCategory: String,
-    val strArea: String,
-    val strInstructions: String, //veliki string
-    val strMealThumb: String, //url slike
+    val strCategory: String?,
+    val strArea: String?,
+    val strInstructions: String?, //veliki string
+    val strMealThumb: String?, //url slike
     val strTags: String?, //String je ali moze da ima vise vrednosti po modelu "tag1, tag2, tag3"
-    val strYoutube: String, // link za video
+    val strYoutube: String?, // link za video
     //zasto ovo nije niz stringova tho?????? :(
     //ako jelo ima npr 6 sastojaka svi dalje ce biti ""
 // Dodala upitnike samo da moze i ne mora da postoji ! mozda ima bolji nacin ?
