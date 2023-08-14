@@ -14,7 +14,6 @@ import coil.compose.AsyncImage
 import com.example.nutritiontracker20.data.models.Category
 import com.example.nutritiontracker20.data.models.Meal
 import com.example.nutritiontracker20.data.models.domain.JIngredient
-import com.example.nutritiontracker20.presentation.contracts.MealContract
 import com.example.nutritiontracker20.utils.MEALS_PAGE
 import com.example.nutritiontracker20.utils.MEAL_DETAIL_PAGE
 
@@ -62,7 +61,7 @@ fun MyPopup (info: String) {
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Composable
-fun MealListView(mealViewModel: MealContract.ViewModel, navController: NavController, meal: Meal, onClick: () -> Unit) {
+fun MealListView(navController: NavController, meal: Meal, onClick: () -> Unit) {
     Surface(modifier = Modifier
         .padding(5.dp)
         .fillMaxSize()

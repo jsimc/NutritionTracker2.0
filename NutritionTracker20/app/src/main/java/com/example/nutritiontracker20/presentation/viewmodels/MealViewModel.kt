@@ -3,7 +3,6 @@ package com.example.nutritiontracker20.presentation.viewmodels
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.paging.PagingData
 import com.example.nutritiontracker20.data.models.Category
 import com.example.nutritiontracker20.data.models.Meal
 import com.example.nutritiontracker20.data.models.Resource
@@ -14,6 +13,9 @@ import com.example.nutritiontracker20.data.repositories.JCategoryRepository
 import com.example.nutritiontracker20.data.repositories.JIngredientRepository
 import com.example.nutritiontracker20.data.repositories.MealRepository
 import com.example.nutritiontracker20.presentation.contracts.MealContract
+import com.example.nutritiontracker20.utils.AREA
+import com.example.nutritiontracker20.utils.CATEGORY
+import com.example.nutritiontracker20.utils.INGREDIENT
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -28,13 +30,16 @@ class MealViewModel(
     private val subscriptions = CompositeDisposable()
     private val publishSubject: PublishSubject<String> = PublishSubject.create()
 
+    // prati sta se kliknulo na homePage-u, da li Kategorija, Area ili Ingredient. Na osnovu toga se odradjuje MealsPage.
+    override val chosenTopAppBar: MutableLiveData<String> = MutableLiveData()
+
     //meals
     override val mealsState: MutableLiveData<Resource<List<Meal>>> = MutableLiveData()
     override val chosenMeal: MutableLiveData<Resource<Meal>> = MutableLiveData()
 
     //categories
     override val categoriesState: MutableLiveData<CategoriesState> = MutableLiveData()
-    override val chosenCategory: MutableLiveData<Category> = MutableLiveData()
+    override val chosenCategory: MutableLiveData<Resource<Category>> = MutableLiveData()
 
     //areas
     override val areasState: MutableLiveData<Resource<List<String>>> = MutableLiveData()
@@ -46,7 +51,6 @@ class MealViewModel(
     override val chosenIngredient: MutableLiveData<Resource<JIngredient>> = MutableLiveData()
 
     init {
-
         Log.d("mealViewModel", "INIT")
         getCategories()
     }
@@ -212,15 +216,18 @@ class MealViewModel(
     }
 
     override fun setKategorija(category: Category) {
-        chosenCategory.value = category
+        chosenCategory.value = Resource.Success(category)
+        chosenTopAppBar.value = CATEGORY
     }
 
     override fun setArea(area: String) {
         chosenArea.value = Resource.Success(area)
+        chosenTopAppBar.value = AREA
     }
 
     override fun setIngredient(ingredient: JIngredient) {
         chosenIngredient.value = Resource.Success(ingredient)
+        chosenTopAppBar.value = INGREDIENT
     }
 
     override fun onCleared() {

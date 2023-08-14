@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -22,7 +23,7 @@ import com.example.nutritiontracker20.utils.INGREDIENT
 @Composable
 fun HomePage(mealViewModel: MealContract.ViewModel, navController: NavController) { //DI mealViewModel u pocetni ekran, HomePage nam je kao pocetni ekran
     val listItems = listOf(CATEGORY, AREA, INGREDIENT)
-    val topAppBarSelectedItem = remember { mutableStateOf(listItems[0]) }
+    val topAppBarSelectedItem = rememberSaveable { mutableStateOf(listItems[0]) }
 
     val categoriesState = mealViewModel.categoriesState.observeAsState(CategoriesState.Loading)
     val areasState = mealViewModel.areasState.observeAsState(Resource.Loading())
@@ -121,24 +122,3 @@ fun myLambdaFunForDropDownMenu(selectedOption: String, listItems: List<String> =
         mealViewModel.getIngredients()
     }
 }
-
-//fun ShowChosenItems(selectedOption: String) {
-//    when (categoriesState.value) {
-//        is CategoriesState.Loading -> { CircularProgressIndicator() }
-//        is CategoriesState.Success -> {
-//            for (category in (categoriesState.value as CategoriesState.Success).categories) {
-//                KategorijaListView(
-//                    navController = navController,
-//                    category = category,
-//                    onClick = {mealViewModel.setKategorija(category)}
-//                )
-//            }
-//        }
-//        is CategoriesState.Error -> {
-//            Toast.makeText(LocalContext.current, (categoriesState.value as CategoriesState.Error).message, Toast.LENGTH_SHORT).show()
-//        }
-//        else -> {
-//            Toast.makeText(LocalContext.current, "Error: ${categoriesState.value}", Toast.LENGTH_SHORT).show()
-//        }
-//    }
-//}
