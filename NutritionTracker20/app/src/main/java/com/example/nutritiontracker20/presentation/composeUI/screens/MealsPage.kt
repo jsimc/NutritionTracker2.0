@@ -1,5 +1,6 @@
 package com.example.nutritiontracker20.presentation.composeUI.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -83,7 +84,9 @@ fun MealsPage(mealViewModel: MealContract.ViewModel, navController: NavControlle
         TopAppBar {
             Text (text = txt)
         }
-        SearchBar(onSearch = {mealViewModel.searchMeal(it)}) //TODO ovo treba izmeniti i u HOME PAGE
+        SearchBar(onSearch = {
+            //Log.d("MealsPage", it)
+            mealViewModel.searchMeal(it)}) //TODO ovo treba izmeniti i u HOME PAGE
         LazyColumn(modifier = Modifier
             .padding(14.dp)
             .fillMaxSize(),

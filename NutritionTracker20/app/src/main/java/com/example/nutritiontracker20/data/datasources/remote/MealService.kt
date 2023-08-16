@@ -1,7 +1,6 @@
 package com.example.nutritiontracker20.data.datasources.remote
 
 import io.reactivex.Observable
-import com.example.nutritiontracker20.data.models.domain.JMeal
 import com.example.nutritiontracker20.data.models.domain.MealsFromJson
 import com.example.nutritiontracker20.data.models.domain.MealsFromJsonFilterByCategory
 import retrofit2.http.GET
@@ -15,8 +14,8 @@ interface MealService {
     @GET("lookup.php")
     fun getMealById(@Query("i") id: Int): Observable<MealsFromJson>
 
-    @GET("search.php?s={name}")
-    fun getMealByName(@Path("name") name: String): Observable<JMeal>
+    @GET("search.php")
+    fun getMealByName(@Query("s") name: String): Observable<MealsFromJson>
 
     @GET("search.php?f={letter}")
     fun getMealsByFirstLetter(@Path("letter") letter: Char): Observable<MealsFromJson>

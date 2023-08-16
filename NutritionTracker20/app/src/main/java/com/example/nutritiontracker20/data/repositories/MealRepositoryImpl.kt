@@ -100,22 +100,23 @@ class MealRepositoryImpl(
             }
     }
 
-    override fun getMealByName(name: String): Observable<Meal> {
+    override fun getMealByName(name: String): Observable<List<Meal>> {
         return mealService
             .getMealByName(name)
-            .map{jMeal->
-                Meal(
-                    idMeal = jMeal.idMeal!!,
-                    strMeal = jMeal.strMeal!!,
-                    strCategory =  jMeal.strCategory!!,
-                    strArea = jMeal.strArea!!,
-                    strInstructions = jMeal.strInstructions!!,
-                    strMealThumb = jMeal.strMealThumb!!,
-                    strTags = jMeal.strTags ?: "",
-                    strYoutube = jMeal.strYoutube!!
+            .map{
+                it.allMeals.map { jMeal ->
+                    Meal(
+                        idMeal = jMeal.idMeal!!,
+                        strMeal = jMeal.strMeal!!,
+                        strCategory = jMeal.strCategory!!,
+                        strArea = jMeal.strArea!!,
+                        strInstructions = jMeal.strInstructions!!,
+                        strMealThumb = jMeal.strMealThumb!!,
+                        strTags = jMeal.strTags ?: "",
+                        strYoutube = jMeal.strYoutube!!
 
-                )
-
+                    )
+                }
             }
 
     }

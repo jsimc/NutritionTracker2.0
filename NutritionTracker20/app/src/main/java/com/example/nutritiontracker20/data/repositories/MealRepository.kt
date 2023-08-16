@@ -19,7 +19,7 @@ interface MealRepository {
     // sa API
     fun getMeals(): Observable<List<Meal>>
     fun getMealById(id: Int): Observable<Meal>
-    fun getMealByName(name: String): Observable<Meal>
+    fun getMealByName(name: String): Observable<List<Meal>>
     fun getMealsByFirstLetter(letter: Char): Observable<List<Meal>>
     fun filterMealsByCategory(category: String): Observable<List<Meal>>
     fun filterMealsByArea(area: String): Observable<List<Meal>>

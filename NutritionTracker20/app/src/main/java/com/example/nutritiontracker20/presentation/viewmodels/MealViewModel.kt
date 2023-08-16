@@ -20,6 +20,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 
 class MealViewModel(
     private val mealRepository: MealRepository,
@@ -53,6 +54,28 @@ class MealViewModel(
     init {
         Log.d("mealViewModel", "INIT")
         getCategories()
+        val subscription = publishSubject
+            .debounce(200, TimeUnit.MILLISECONDS)
+            .distinctUntilChanged()
+            .switchMap {
+                mealRepository
+                    .getMealByName(it)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnError {
+                        Log.d("SearchMeal", "switch map")
+                        mealsState.value = Resource.Error(it, listOf())
+                    }
+            }
+            .subscribe(
+                {
+                    mealsState.value = Resource.Success(it)
+                },
+                {
+                    mealsState.value = Resource.Error(it, listOf())
+                }
+            )
+        subscriptions.add(subscription)
     }
 
     override fun getCategories() {
@@ -208,7 +231,35 @@ class MealViewModel(
     }
 
     override fun searchMeal(searchBy: String) {
-        TODO("Not yet implemented")
+        publishSubject.onNext(searchBy)
+//        val subscription = publishSubject
+//            .debounce(200, TimeUnit.MILLISECONDS)
+//            .distinctUntilChanged()
+//            .switchMap {
+//                mealRepository
+//                    .getMeals()
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .doOnError {
+//                        Log.d("SearchMeal", "switch map")
+//                        mealsState.value = Resource.Error(it, listOf())
+//                    }
+//            }
+//            .subscribe(
+//                {
+//                    Log.d("SearchMeal", "searchBy: $searchBy")
+//                    it.filter { meal -> //vraca jela cija imena pocinju na dati string
+//                        meal.strMeal.startsWith(searchBy, true)
+//                    }.apply {
+//                        Log.d("SearchMeal", "filteredItems: ${it.map { meal -> meal.strMeal }}")
+//                        mealsState.value = Resource.Success(it)
+//                    }
+//                },
+//                {
+//                    mealsState.value = Resource.Error(it, listOf())
+//                }
+//            )
+//        subscriptions.add(subscription)
     }
 
     override fun searchCategory(searchBy: String) {

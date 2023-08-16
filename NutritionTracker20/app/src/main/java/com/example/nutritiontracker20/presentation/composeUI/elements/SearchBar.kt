@@ -8,11 +8,12 @@ import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 
 @Composable
 fun SearchBar(onSearch: (String) -> Unit) {
-    var searchBy by remember {
+    var searchBy by rememberSaveable {
         mutableStateOf("")
     }
     Row (modifier = Modifier.fillMaxWidth()) {
