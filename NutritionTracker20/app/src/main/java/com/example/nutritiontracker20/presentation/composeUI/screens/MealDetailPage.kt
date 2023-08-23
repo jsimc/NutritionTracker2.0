@@ -38,6 +38,7 @@ import com.example.nutritiontracker20.presentation.composeUI.theme.DrugaGlavnaBo
 import com.example.nutritiontracker20.presentation.composeUI.theme.GlavnaBoja
 import com.example.nutritiontracker20.R
 import com.example.nutritiontracker20.data.models.Resource
+import com.example.nutritiontracker20.presentation.composeUI.elements.HyperlinkText
 import com.example.nutritiontracker20.presentation.contracts.MealContract
 import com.example.nutritiontracker20.utils.SAVE_MEAL_SCREEN
 
@@ -153,6 +154,17 @@ fun MealDetailPage (
                 item {
                     Text(text = tmpChosenMeal.strInstructions)
                 }
+                //TODO proveri da li radi
+                // VIDEO
+                item {
+                    if(tmpChosenMeal.strYoutube != "") {
+                        HyperlinkText(
+                            fullText = "Watch video tutorial",
+                            linkText = listOf("Watch video tutorial"),
+                            hyperlinks = listOf(tmpChosenMeal.strYoutube)
+                        )
+                    }
+                }
                 // TAGOVI - string razdvojen po zarezu
                 item {
                     LazyRow() {
@@ -185,8 +197,14 @@ fun IngredientListView(name: String = "Name: not available", measure: String = "
             .clickable(true) { onClick() }
     ) {
         // mozda mini slika sastojka?
-        Text (text = name, modifier = Modifier.padding(15.dp).weight(1f))
-        Text (text = measure, modifier = Modifier.padding(15.dp).weight(1f))
-        Text (text = kcal, modifier = Modifier.padding(15.dp).weight(1f))
+        Text (text = name, modifier = Modifier
+            .padding(15.dp)
+            .weight(1f))
+        Text (text = measure, modifier = Modifier
+            .padding(15.dp)
+            .weight(1f))
+        Text (text = kcal, modifier = Modifier
+            .padding(15.dp)
+            .weight(1f))
     }
 }

@@ -14,8 +14,10 @@ import com.example.nutritiontracker20.presentation.composeUI.elements.MyBottomNa
 import com.example.nutritiontracker20.presentation.composeUI.graphs.RootNavigationGraph
 import com.example.nutritiontracker20.presentation.composeUI.theme.NasaTema
 import com.example.nutritiontracker20.presentation.contracts.MealContract
+import com.example.nutritiontracker20.presentation.contracts.PlanContract
 import com.example.nutritiontracker20.presentation.contracts.UserContract
 import com.example.nutritiontracker20.presentation.viewmodels.MealViewModel
+import com.example.nutritiontracker20.presentation.viewmodels.PlanViewModel
 import com.example.nutritiontracker20.presentation.viewmodels.UserViewModel
 import com.example.nutritiontracker20.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -25,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     private val mealViewModel: MealContract.ViewModel by viewModel<MealViewModel>()
     private val userViewModel: UserContract.ViewModel by viewModel<UserViewModel>()
-
+    private val planViewModel: PlanContract.ViewModel by viewModel<PlanViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         init()
@@ -36,7 +38,7 @@ class MainActivity : AppCompatActivity() {
                 Scaffold(
                     bottomBar = { MyBottomNavigation(navController = navController) }
                 ) { paddingValues ->
-                    RootNavigationGraph(navController = navController, mealViewModel = mealViewModel, userViewModel = userViewModel, paddingValues = paddingValues)
+                    RootNavigationGraph(navController = navController, mealViewModel = mealViewModel, userViewModel = userViewModel, planViewModel = planViewModel, paddingValues = paddingValues)
                 }
             }
         }

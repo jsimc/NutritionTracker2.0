@@ -6,15 +6,22 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.nutritiontracker20.presentation.composeUI.screens.*
 import com.example.nutritiontracker20.presentation.contracts.MealContract
+import com.example.nutritiontracker20.presentation.contracts.PlanContract
 import com.example.nutritiontracker20.presentation.contracts.UserContract
+import com.example.nutritiontracker20.presentation.viewmodels.PlanViewModel
 import com.example.nutritiontracker20.utils.*
-fun NavGraphBuilder.mainGraph(navController: NavController, mealViewModel: MealContract.ViewModel, userViewModel: UserContract.ViewModel) {
+fun NavGraphBuilder.mainGraph(
+    navController: NavController,
+    mealViewModel: MealContract.ViewModel,
+    userViewModel: UserContract.ViewModel,
+    planViewModel: PlanContract.ViewModel
+) {
     navigation(startDestination = HOME_PAGE, route = MAIN_GRAPH) {
         composable(route = HOME_PAGE) {
-            HomePage(mealViewModel = mealViewModel, navController = navController)
+            HomePage(mealViewModel = mealViewModel, planViewModel = planViewModel, navController = navController)
         }
         composable(route = MEALS_PAGE) {
-            MealsPage(mealViewModel = mealViewModel, navController = navController)
+            MealsPage(mealViewModel = mealViewModel, planViewModel = planViewModel, navController = navController)
         }
         composable(route = MEAL_DETAIL_PAGE) {
             MealDetailPage(mealViewModel = mealViewModel, navController = navController)
@@ -26,7 +33,7 @@ fun NavGraphBuilder.mainGraph(navController: NavController, mealViewModel: MealC
             ProfileScreen(userViewModel = userViewModel, navController = navController)
         }
         composable(route = CREATE_PLAN_SCREEN) {
-            CreatePlanScreen()
+            CreatePlanScreen(planViewModel = planViewModel, navController = navController)
         }
     }
 }

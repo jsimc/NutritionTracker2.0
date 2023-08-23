@@ -51,10 +51,8 @@ fun ProfileScreen(userViewModel: UserContract.ViewModel, navController: NavContr
                 alignment = Alignment.Center
             )
         }
-        //TODO
 // USERNAME
         item {
-            // TODO OMFGH RADI
             // ali username ne treba da moze da se menja!
             RowItemTextField(label = "username", initialValue = user.value?.username ?: "Not available", readOnly = true, onChange = {})
         }
@@ -110,7 +108,7 @@ fun ProfileScreen(userViewModel: UserContract.ViewModel, navController: NavContr
                 .padding(6.dp)
                 .fillMaxWidth()) {
                 Button(onClick = {
-                  val newUser = 
+                    val newUser =
                       User(user.value!!.username, user.value!!.password, user.value!!.age, user.value!!.height, 
                           user.value!!.weight, user.value!!.gender, user.value!!.weeklyActivity, kcalCalculator(user.value?.gender!!, user.value?.height!!, user.value?.weight!!, user.value?.age!!))
                     userViewModel.updateUser(newUser)

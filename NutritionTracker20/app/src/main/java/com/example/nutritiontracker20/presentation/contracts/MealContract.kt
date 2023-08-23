@@ -9,7 +9,6 @@ import com.example.nutritiontracker20.data.models.states.CategoriesState
 
 interface MealContract {
     interface ViewModel {
-
         val chosenTopAppBar: LiveData<String>
 
         val mealsState: LiveData<Resource<List<Meal>>>
@@ -32,6 +31,7 @@ interface MealContract {
         fun getMealsByFirstLetter(letter: Char)
         fun filterMealsByCategory(category: String)
         fun filterMealsByArea(area: String)
+        fun filterMealsByTags(tags: List<String>)
 
         fun getCategories()
         fun getAreas()

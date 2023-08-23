@@ -10,9 +10,9 @@ import androidx.compose.ui.platform.LocalContext
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 //Da se prosledjuje i modifier!
-fun MyDropDownMenu(listItems: List<Any>, modifier: Modifier, firstSelected: Int = 0, selectedOption: MutableState<Any> = mutableStateOf(listItems[firstSelected]), onClick: (Any?) -> Unit) {
+fun MyDropDownMenu(listItems: List<Any>, modifier: Modifier = Modifier, firstSelected: Int = 0, selectedOption: MutableState<Any> = mutableStateOf(listItems[firstSelected]), onClick: (Any?) -> Unit) {
 //    val listItems = arrayOf("Kategorija", "Oblast", "Sastojci")
-    val contextForToast = LocalContext.current.applicationContext
+//    val contextForToast = LocalContext.current.applicationContext
     // state of the menu
     var expanded by remember {
         mutableStateOf(false)
@@ -38,6 +38,9 @@ fun MyDropDownMenu(listItems: List<Any>, modifier: Modifier, firstSelected: Int 
 //            modifier = Modifier.fillMaxWidth(),
             value = selectedOption.value.toString(),
             onValueChange = {},
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
             readOnly = true,
             colors = ExposedDropdownMenuDefaults.textFieldColors()
         )
@@ -53,9 +56,7 @@ fun MyDropDownMenu(listItems: List<Any>, modifier: Modifier, firstSelected: Int 
                 // menu item
                 DropdownMenuItem(onClick = {
                     selectedOption.value = selectedOptionn
-                    // TODO  JOS nesto se dogadja ovde!? -- moram da napravim da se lazyColumn menja
                     onClick(selectedOption.value)
-                    Toast.makeText(contextForToast, selectedOption.value.toString(), Toast.LENGTH_SHORT).show()
                     expanded = false
                 }, modifier = Modifier.clip(MaterialTheme.shapes.medium)) {
                     Text(text = selectedOptionn.toString())

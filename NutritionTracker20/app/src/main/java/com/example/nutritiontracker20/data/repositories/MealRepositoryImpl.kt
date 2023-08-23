@@ -1,5 +1,7 @@
 package com.example.nutritiontracker20.data.repositories
 
+import android.annotation.SuppressLint
+import android.util.Log
 import io.reactivex.Completable
 import io.reactivex.Observable
 import com.example.nutritiontracker20.data.datasources.daos.SavedMealDao
@@ -7,6 +9,8 @@ import com.example.nutritiontracker20.data.datasources.remote.MealService
 import com.example.nutritiontracker20.data.entities.SavedMealsEntity
 import com.example.nutritiontracker20.data.models.Meal
 import com.example.nutritiontracker20.data.models.domain.JMeal
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class MealRepositoryImpl(
     private val savedMealDao: SavedMealDao,
@@ -114,9 +118,8 @@ class MealRepositoryImpl(
                         strMealThumb = jMeal.strMealThumb!!,
                         strTags = jMeal.strTags ?: "",
                         strYoutube = jMeal.strYoutube!!
-
                     )
-                }
+                }.sortedBy { meal -> meal.strMeal }
             }
 
     }
@@ -140,7 +143,22 @@ class MealRepositoryImpl(
             }
     }
 
+    //TODO sta je problem! Kada bih filtrirala jela po Category onda ne izbacuje SVA jela po kategoriji. (Tj. mealService.getMeals() vraca samo neka jela)
+    // zato moram da koristim filterMealsByCategory(category), jer mi vraca veci broj jela. Ali tu nastaje problem sto mi to vraca samo 3 atributa datih jela, id, opis i sliku.
+    // to jeste dovoljno za prikaz u listi, ali nije za npr filtriranje po tagu, sto je meni potrebno!
+    // A sa druge strane, ako koristis dva api poziva, onda puca HTTP 429 (?) tj preveliki broj api poziva u kratko vreme!
+    // jedino kad bismo imali drugaciji getMealById poziv u mealViewModelu, gde ne postavljamo chosenMealState
+    // nego samo vracamo jela sa tim id-ijevima. ????
     override fun filterMealsByCategory(category: String): Observable<List<Meal>> {
+//        return mealService
+//            .filterMealsByCategory(category)
+//            .flatMap {
+//                Observable.fromIterable(it.allMeals)
+//                    .flatMap {jMealFilterByCat ->
+//                        getMealById(jMealFilterByCat.idMeal)
+//                    }
+//                    .toList().toObservable()
+//            }
         return mealService
             .filterMealsByCategory(category)
             .map{
@@ -150,7 +168,6 @@ class MealRepositoryImpl(
                         strMeal = jMeal.strMeal,
                         strMealThumb = jMeal.strMealThumb,
                     )
-
                 }
             }
     }

@@ -16,6 +16,8 @@ import com.example.nutritiontracker20.presentation.contracts.MealContract
 import com.example.nutritiontracker20.utils.AREA
 import com.example.nutritiontracker20.utils.CATEGORY
 import com.example.nutritiontracker20.utils.INGREDIENT
+import io.reactivex.Notification
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -52,24 +54,24 @@ class MealViewModel(
     override val chosenIngredient: MutableLiveData<Resource<JIngredient>> = MutableLiveData()
 
     init {
-        Log.d("mealViewModel", "INIT")
         getCategories()
         val subscription = publishSubject
             .debounce(200, TimeUnit.MILLISECONDS)
             .distinctUntilChanged()
-            .switchMap {
+            .switchMap { mealName ->
                 mealRepository
-                    .getMealByName(it)
+                    .getMealByName(mealName)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnError {
-                        Log.d("SearchMeal", "switch map")
-                        mealsState.value = Resource.Error(it, listOf())
-                    }
+                    .onErrorReturnItem(emptyList())
             }
             .subscribe(
                 {
-                    mealsState.value = Resource.Success(it)
+                    if (it.isEmpty()) {
+                        mealsState.value = Resource.Error(Throwable("No resutls"), listOf())
+                    } else {
+                        mealsState.value = Resource.Success(it)
+                    }
                 },
                 {
                     mealsState.value = Resource.Error(it, listOf())
@@ -166,7 +168,6 @@ class MealViewModel(
     }
 
     override fun filterMealsByCategory(category: String) {
-        println("CATEGORY IN FILTER MEALS BY CAT: $category")
         val sub = mealRepository
             .filterMealsByCategory(category)
             .subscribeOn(Schedulers.io())
@@ -223,6 +224,43 @@ class MealViewModel(
         subscriptions.add(sub)
     }
 
+    //TODO MOZDA DA SKLONIMO OVO IPAK
+    override fun filterMealsByTags(tags: List<String>) {
+        if(mealsState.value is Resource.Success) {
+            if(tags.isEmpty()) {
+                //topAppBarState
+                when(chosenTopAppBar.value) {
+                    CATEGORY -> {
+                        filterMealsByCategory((chosenCategory.value as Resource.Success).data.strCategory)
+                    }
+                    AREA -> {
+                        filterMealsByArea((chosenArea.value as Resource.Success).data)
+                    }
+                    INGREDIENT -> {
+                        filterMealsByIngredient((chosenIngredient.value as Resource.Success).data.strIngredient!!)
+                    }
+                    else -> {
+                        Log.d("filterMealsByTags", "Error")
+                    }
+                }
+            } else {
+                Log.d("filterMealsByTags", "tags: $tags")
+                mealsState.value = Resource.Success((mealsState.value as Resource.Success).data
+                    .filter {
+                        // ZATO STO JE API SR**E, MEAL TAGS CE UVEK BITI PRAZNA LISTA....
+//                        val mealTags = it.strTags.split(", ", ",") // Nadajmo se da ovaj split vraca dobru listu,
+                        // API JE UZASAN I NEMA TAGOVE U OVIM JELIMA, TAKO DA CEMO DA GLEDAMO PO IMENU BMK
+//                        Log.d("filterMealsByTags", "meal: ${it.strMeal}, meal.strTags: ${it.strTags}, mealTags: $mealTags")
+//                        mealTags.containsAll(tags)// a onda proveravamo da li tagovi od datog jela sadrze sve tagove koje sam prosledila.
+
+                        // tags nikad nece biti empty u else blocku
+                        it.strMeal.contains(tags[0], true)
+                    }
+                )
+            }
+        }
+    }
+
     override fun search(searchBy: String) {
         TODO("Not yet implemented")
 //        print(searchBy)
@@ -232,34 +270,6 @@ class MealViewModel(
 
     override fun searchMeal(searchBy: String) {
         publishSubject.onNext(searchBy)
-//        val subscription = publishSubject
-//            .debounce(200, TimeUnit.MILLISECONDS)
-//            .distinctUntilChanged()
-//            .switchMap {
-//                mealRepository
-//                    .getMeals()
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .doOnError {
-//                        Log.d("SearchMeal", "switch map")
-//                        mealsState.value = Resource.Error(it, listOf())
-//                    }
-//            }
-//            .subscribe(
-//                {
-//                    Log.d("SearchMeal", "searchBy: $searchBy")
-//                    it.filter { meal -> //vraca jela cija imena pocinju na dati string
-//                        meal.strMeal.startsWith(searchBy, true)
-//                    }.apply {
-//                        Log.d("SearchMeal", "filteredItems: ${it.map { meal -> meal.strMeal }}")
-//                        mealsState.value = Resource.Success(it)
-//                    }
-//                },
-//                {
-//                    mealsState.value = Resource.Error(it, listOf())
-//                }
-//            )
-//        subscriptions.add(subscription)
     }
 
     override fun searchCategory(searchBy: String) {

@@ -7,7 +7,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.example.nutritiontracker20.presentation.contracts.MealContract
+import com.example.nutritiontracker20.presentation.contracts.PlanContract
 import com.example.nutritiontracker20.presentation.contracts.UserContract
+import com.example.nutritiontracker20.presentation.viewmodels.PlanViewModel
 import com.example.nutritiontracker20.utils.INTRO_GRAPH
 import com.example.nutritiontracker20.utils.ROOT_GRAPH
 
@@ -16,6 +18,7 @@ fun RootNavigationGraph(
     navController: NavHostController,
     mealViewModel: MealContract.ViewModel,
     userViewModel: UserContract.ViewModel,
+    planViewModel: PlanContract.ViewModel,
     paddingValues: PaddingValues
 ) {
     NavHost(
@@ -26,6 +29,6 @@ fun RootNavigationGraph(
     ) {
         println("root nav graph")
         introGraph(navController = navController, userViewModel = userViewModel)
-        mainGraph(navController = navController, mealViewModel = mealViewModel, userViewModel = userViewModel)
+        mainGraph(navController = navController, mealViewModel = mealViewModel, userViewModel = userViewModel, planViewModel = planViewModel)
     }
 }

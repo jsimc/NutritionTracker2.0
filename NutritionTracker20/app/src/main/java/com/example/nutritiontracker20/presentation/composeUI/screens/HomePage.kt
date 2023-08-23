@@ -16,12 +16,11 @@ import com.example.nutritiontracker20.data.models.Resource
 import com.example.nutritiontracker20.data.models.states.CategoriesState
 import com.example.nutritiontracker20.presentation.composeUI.elements.*
 import com.example.nutritiontracker20.presentation.contracts.MealContract
-import com.example.nutritiontracker20.utils.AREA
-import com.example.nutritiontracker20.utils.CATEGORY
-import com.example.nutritiontracker20.utils.INGREDIENT
+import com.example.nutritiontracker20.presentation.contracts.PlanContract
+import com.example.nutritiontracker20.utils.*
 
 @Composable
-fun HomePage(mealViewModel: MealContract.ViewModel, navController: NavController) { //DI mealViewModel u pocetni ekran, HomePage nam je kao pocetni ekran
+fun HomePage(mealViewModel: MealContract.ViewModel, planViewModel: PlanContract.ViewModel, navController: NavController) { //DI mealViewModel u pocetni ekran, HomePage nam je kao pocetni ekran
     val listItems = listOf(CATEGORY, AREA, INGREDIENT)
     val topAppBarSelectedItem = rememberSaveable { mutableStateOf(listItems[0]) }
     val searchFlag = rememberSaveable { mutableStateOf(false) }
@@ -31,7 +30,8 @@ fun HomePage(mealViewModel: MealContract.ViewModel, navController: NavController
     val ingredientsState = mealViewModel.ingredientsState.observeAsState(Resource.Loading())
 
     val mealsState = mealViewModel.mealsState.observeAsState(Resource.Loading())
-
+    val context = LocalContext.current
+    var sortBy by remember { mutableStateOf(true) } // ako je true onda A-Z, ako je false onda Z-A
     Column {
         TopAppBar {
             //TODO ovde mozemo da ubacimo npr dugme gde mozemo videti sve favorite
@@ -48,15 +48,12 @@ fun HomePage(mealViewModel: MealContract.ViewModel, navController: NavController
                 searchFlag.value = false
             }
         }
-        //searchMeal menja mealsState!
         SearchBar(onSearch = {mealViewModel.searchMeal(it)
             searchFlag.value = true})
-//        TextField (modifier = Modifier.fillMaxWidth(), value = "",
-//                onValueChange = {mealViewModel.search(it)})
-        Row (horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-            Button (onClick = {}) { Text (text = "filter") }
-            Button (onClick = {}) { Text (text = "sort") }
-        }
+        Button (onClick = {
+            sortBy = !sortBy
+        }) { Text (text = "sort: ${if (sortBy) "A-Z" else "Z-A"}") }
+
         LazyColumn(modifier = Modifier
             .padding(14.dp)
             .fillMaxSize(),
@@ -64,22 +61,42 @@ fun HomePage(mealViewModel: MealContract.ViewModel, navController: NavController
             verticalArrangement = Arrangement.Center)
         {
             if (searchFlag.value) {
+                //JELA
                 item {
                     when (mealsState.value) {
                         is Resource.Loading -> { CircularProgressIndicator() }
-                        is Resource.Error -> {Toast.makeText(
+                        is Resource.Error -> {
+                            Toast.makeText(
                                 LocalContext.current,
                                 (mealsState.value as Resource.Error).error.message,
                                 Toast.LENGTH_SHORT
                             ).show()
+                            searchFlag.value = false
                         }
                         is Resource.Success -> {
-                            for (meal in (mealsState.value as Resource.Success).data) {
-                                MealListView(
-                                    navController = navController,
-                                    meal = meal,
-                                    onClick = { mealViewModel.getMealById(meal.idMeal) } //odmah prelazimo na detaljan prikaz jela
-                                )
+                            if((mealsState.value as Resource.Success).data.isNotEmpty()) {
+                                var mealsList = (mealsState.value as Resource.Success).data
+                                if(!sortBy) mealsList = mealsList.sortedByDescending { meal -> meal.strMeal }
+                                for (meal in mealsList) {
+                                    MealListView(
+                                        navController = navController,
+                                        meal = meal,
+                                        onClick = {
+                                            if(CREATE_PLAN_MODE) {
+                                                // TODO
+                                                //  planViewModel.mapa
+                                                //  u kom trenutku treba pozvati: CREATE_PLAN_MODE = false? ovde?
+//                                                Toast.makeText(context, "CREATE_PLAN_MODE activated - HomePage", Toast.LENGTH_SHORT).show()
+                                                planViewModel.setMeal(meal)
+                                                CREATE_PLAN_MODE = false
+                                                navController.navigate(CREATE_PLAN_SCREEN)
+                                            } else {
+                                                mealViewModel.getMealById(meal.idMeal)
+                                                navController.navigate(MEAL_DETAIL_PAGE)
+                                            }
+                                        } //odmah prelazimo na detaljan prikaz jela
+                                    )
+                                }
                             }
                         }
                     }
@@ -100,7 +117,9 @@ fun HomePage(mealViewModel: MealContract.ViewModel, navController: NavController
                                     ).show()
                                 }
                                 is CategoriesState.Success -> {
-                                    for (category in (categoriesState.value as CategoriesState.Success).categories) {
+                                    var categoriesList = (categoriesState.value as CategoriesState.Success).categories
+                                    if(!sortBy) categoriesList = categoriesList.sortedByDescending { cat -> cat.strCategory }
+                                    for (category in categoriesList) {
                                         KategorijaListView(
                                             navController = navController,
                                             category = category,
@@ -130,7 +149,9 @@ fun HomePage(mealViewModel: MealContract.ViewModel, navController: NavController
                                     ).show()
                                 }
                                 is Resource.Success -> {
-                                    for (area in (areasState.value as Resource.Success).data) {
+                                    var areasList = (areasState.value as Resource.Success).data
+                                    if(!sortBy) areasList = areasList.sortedByDescending { area -> area }
+                                    for (area in areasList) {
                                         AreaListView(
                                             navController = navController,
                                             area = area,
@@ -153,7 +174,9 @@ fun HomePage(mealViewModel: MealContract.ViewModel, navController: NavController
                                     ).show()
                                 }
                                 is Resource.Success -> {
-                                    for (ingredient in (ingredientsState.value as Resource.Success).data) {
+                                    var ingredientList = (ingredientsState.value as Resource.Success).data
+                                    if(!sortBy) ingredientList = ingredientList.sortedByDescending { ing -> ing.strIngredient }
+                                    for (ingredient in ingredientList) {
                                         JIngredientListView(
                                             navController = navController,
                                             ingredient = ingredient,

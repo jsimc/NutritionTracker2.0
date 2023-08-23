@@ -81,7 +81,6 @@ fun MealListView(navController: NavController, meal: Meal, onClick: () -> Unit) 
 //                }
             }
             onClick()
-            navController.navigate(MEAL_DETAIL_PAGE)
         }
         .clip(MaterialTheme.shapes.medium)
     ) {

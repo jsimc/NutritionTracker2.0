@@ -1,7 +1,6 @@
 package com.example.nutritiontracker20.presentation.composeUI.elements
 
-import android.icu.text.DateFormatSymbols
-import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
@@ -13,18 +12,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import java.time.format.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.nutritiontracker20.data.models.MealPlan
+import com.example.nutritiontracker20.presentation.composeUI.theme.GlavnaBoja
+import com.example.nutritiontracker20.utils.eMealOfTheDay
+import java.time.DayOfWeek
 import java.time.LocalDate
+import java.util.*
 
 @Composable
-fun PlanGridView() {
-    //Kad se klikne na plan treba da se otvori opet onaj pocetni ekran, ali posto ima u viewModelu BOOLEAN,
-    // onda kad se otvori plan -> treba samo da se sacuva
-    val dateFSymbols = DateFormatSymbols.getInstance()
-    val weekdays = arrayOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
-    val meals = listOf("Breakfast", "Lunch", "Dinner")
+fun PlanGridView(mealsMapa: MutableMap<String, MealPlan>? = mutableMapOf(), onClick: (chosenDayOfTheWeek: DayOfWeek, chosenMealOfTheDay: eMealOfTheDay) -> Any) {
+    val weekdays = listOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
+    val meals = listOf(eMealOfTheDay.BREAKFAST, eMealOfTheDay.LUNCH, eMealOfTheDay.DINNER)
     val cardDates = remember { mutableStateListOf<LocalDate>() }
     val localDate = LocalDate.now()
     for (i in 0 until 6) {
@@ -34,14 +36,16 @@ fun PlanGridView() {
     Column {
         Row(modifier=Modifier.padding(bottom=1.dp)){
             weekdays.forEach{
-                HeaderCell(text = it)
+                HeaderCell(text = it.getDisplayName(TextStyle.SHORT, Locale.getDefault()))
             }
         }
         Row {
             weekdays.forEach { weekday ->
                 Column {
                     meals.forEach {meal ->
-                        MyCard(mealName = meal, weekday = weekday)
+                        MyCard(mealOfTheDay = meal, color = if (mealsMapa != null && mealsMapa.contains(weekday.name) && mealsMapa[weekday.name]!!.mealOfTheDay == meal) Color.Green else GlavnaBoja) {
+                            onClick(weekday, meal) // prosledjuje se MyCard()
+                        }
                     }
                 }
             }
@@ -68,28 +72,22 @@ fun HeaderCell(text: String) {
 }
 
 @Composable
-fun MyCard(mealName: String, weekday: String) {
-    val context = LocalContext.current.applicationContext
+fun MyCard(mealOfTheDay: eMealOfTheDay, color: Color = GlavnaBoja, onClick: () -> Any) {
     Card(
         modifier = Modifier
             .size(58.dp, 80.dp)
             .padding(horizontal=2.dp, vertical=4.dp)
             .clickable{
-                  /**TODO
-                   * mealViewModel.setMealTimeToBeSaved(mealName)
-                   * mealViewModel.setDate(weekday) --> mogu i da napravim da je weekday Int, a takodje
-                   * mi je bitno da ima i currDate u viewModelu, ali to mi treba onaj lazyRow iznad ovog grida
-                   * **/
-                Toast.makeText(context, weekday, Toast.LENGTH_SHORT).show()
+                onClick()
             },
         elevation = 10.dp
     ) {
         Row(
-            modifier = Modifier.padding(top = 1.dp),
+            modifier = Modifier.background(color).padding(top = 1.dp),
             verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(mealName, fontSize = 9.sp)
+            Text(mealOfTheDay.name, fontSize = 9.sp)
         }
     }
 }
