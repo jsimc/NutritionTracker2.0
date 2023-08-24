@@ -8,7 +8,6 @@ import com.example.nutritiontracker20.presentation.composeUI.screens.*
 import com.example.nutritiontracker20.presentation.contracts.MealContract
 import com.example.nutritiontracker20.presentation.contracts.PlanContract
 import com.example.nutritiontracker20.presentation.contracts.UserContract
-import com.example.nutritiontracker20.presentation.viewmodels.PlanViewModel
 import com.example.nutritiontracker20.utils.*
 fun NavGraphBuilder.mainGraph(
     navController: NavController,
@@ -27,7 +26,7 @@ fun NavGraphBuilder.mainGraph(
             MealDetailPage(mealViewModel = mealViewModel, navController = navController)
         }
         composable(route = SAVE_MEAL_SCREEN) {
-            SaveMealScreen(navController = navController)
+            SaveMealScreen(mealViewModel = mealViewModel, userViewModel = userViewModel, navController = navController)
         }
         composable(route = PROFILE_SCREEN) {
             ProfileScreen(userViewModel = userViewModel, navController = navController)

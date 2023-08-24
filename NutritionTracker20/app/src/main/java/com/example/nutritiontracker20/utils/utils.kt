@@ -35,6 +35,7 @@ val SAVED_MEALS = listOf<SavedMealsEntity>(
 const val CATEGORY = "Categories"
 const val AREA = "Areas"
 const val INGREDIENT = "Ingredients"
+const val MEAL = "Meals"
 //------------------------------------------------------
 val TAGS = listOf(
         "Meat", "Treat", "Soup", "Streetfood", "Onthego", "SideDish", "Curry", "Vegetarian" ,"Cake", "MainMeal", "UnHealthy", "Speciality",

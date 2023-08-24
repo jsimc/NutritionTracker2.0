@@ -17,7 +17,7 @@ import com.example.nutritiontracker20.data.entities.UserEntity
 //IngredientEntityTmp::class
 @Database(
     entities = [UserEntity::class, SavedMealsEntity::class, IngredientsEntity::class, IngredientInMealEntity::class],
-    version = 5, //OBAVEZNO KAD SE MENJA STRUKTURA BAZE MORA DA SE PROMENI VERZIJA SVAKI PUT PRE POKRETANJA PROJEKTA (praksa version += 1)
+    version = 6, //OBAVEZNO KAD SE MENJA STRUKTURA BAZE MORA DA SE PROMENI VERZIJA SVAKI PUT PRE POKRETANJA PROJEKTA (praksa version += 1)
     exportSchema = false
 )
 //ovde konvertujemo komleksne u jednostavne tipove da bi se cuvali lepo u bazi - npr datum

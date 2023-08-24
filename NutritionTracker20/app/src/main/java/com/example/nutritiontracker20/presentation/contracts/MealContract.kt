@@ -1,6 +1,7 @@
 package com.example.nutritiontracker20.presentation.contracts
 
 import androidx.lifecycle.LiveData
+import com.example.nutritiontracker20.data.entities.SavedMealsEntity
 import com.example.nutritiontracker20.data.models.Category
 import com.example.nutritiontracker20.data.models.Meal
 import com.example.nutritiontracker20.data.models.Resource
@@ -25,6 +26,8 @@ interface MealContract {
         val ingredientsState: LiveData<Resource<List<JIngredient>>>
         val chosenIngredient: LiveData<Resource<JIngredient>>
 
+        val savedMealState: LiveData<Boolean>
+
         fun getMeals()
         fun getMealById(id: Int)
         fun getMealByName(name: String)
@@ -44,9 +47,11 @@ interface MealContract {
         // TODO rad sa podacima u view modelu
         // koja je razlika izmedju rx i obicnog ovog view modela?
     /////////////////////////////////////////////////////////////////////////////
-
         fun setKategorija(category: Category)
         fun setArea(area: String)
         fun setIngredient(ingredient: JIngredient)
+    /////////////////////////////////////////////////////////////////////////////
+        // SA BAZOM
+        fun saveMealToFavorites(savedMealsEntity: SavedMealsEntity)
     }
 }

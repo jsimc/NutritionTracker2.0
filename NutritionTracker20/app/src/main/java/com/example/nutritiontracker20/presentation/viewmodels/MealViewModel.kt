@@ -3,6 +3,7 @@ package com.example.nutritiontracker20.presentation.viewmodels
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.nutritiontracker20.data.entities.SavedMealsEntity
 import com.example.nutritiontracker20.data.models.Category
 import com.example.nutritiontracker20.data.models.Meal
 import com.example.nutritiontracker20.data.models.Resource
@@ -52,6 +53,9 @@ class MealViewModel(
     // jer sad cu da koristim JIngredient jer imamo ingredient u BAZI koji nema istu strukturu kao ovaj sa APIja koji koristimo!
     override val ingredientsState: MutableLiveData<Resource<List<JIngredient>>> = MutableLiveData()
     override val chosenIngredient: MutableLiveData<Resource<JIngredient>> = MutableLiveData()
+
+    // saved meal state
+    override val savedMealState: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
         getCategories()
@@ -291,6 +295,25 @@ class MealViewModel(
         chosenTopAppBar.value = INGREDIENT
     }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    override fun saveMealToFavorites(savedMealsEntity: SavedMealsEntity) {
+        val sub = mealRepository
+            .insertMeal(savedMealsEntity)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    savedMealState.value = true
+                    Log.d("SaveMeal", "SAVED")
+                },
+                {
+                    savedMealState.value = false
+                    Log.d("SaveMeal", "NOT SAVED: $it")
+                }
+            )
+        // za dobalvjanje kategorija, Oblasti. .. .
+        subscriptions.add(sub)
+    }
     override fun onCleared() {
         super.onCleared()
         subscriptions.clear()
