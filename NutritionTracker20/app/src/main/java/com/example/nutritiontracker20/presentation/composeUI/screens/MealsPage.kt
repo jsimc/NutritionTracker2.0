@@ -157,16 +157,7 @@ fun MealsPage(mealViewModel: MealContract.ViewModel, planViewModel: PlanContract
                         listItems = kcalFilterListItems,
                         selectedOption = kcalFilterSelectedOption as MutableState<Any>,
                         modifier = Modifier.weight(1f)
-                    ) {
-//                        Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
-                        if (it.toString() == "in between") {
-                            Toast.makeText(context, "in between", Toast.LENGTH_SHORT).show()
-                        } else if (it.toString() == "more than") {
-                            Toast.makeText(context, "more than", Toast.LENGTH_SHORT).show()
-                        } else if (it.toString() == "less than") {
-                            Toast.makeText(context, "less than", Toast.LENGTH_SHORT).show()
-                        }
-                    }
+                    ) {}
                     if(kcalFilterSelectedOption.value == "in between") {
                         TextField(
                             value = fromTfValue,

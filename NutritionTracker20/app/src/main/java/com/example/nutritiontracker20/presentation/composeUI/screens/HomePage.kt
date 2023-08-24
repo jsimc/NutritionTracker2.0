@@ -34,7 +34,6 @@ fun HomePage(mealViewModel: MealContract.ViewModel, planViewModel: PlanContract.
     var sortBy by remember { mutableStateOf(true) } // ako je true onda A-Z, ako je false onda Z-A
     Column {
         TopAppBar {
-            //TODO ovde mozemo da ubacimo npr dugme gde mozemo videti sve favorite
             MyDropDownMenu(
                 listItems = listItems,
                 modifier = Modifier.fillMaxWidth(),
@@ -194,7 +193,7 @@ fun HomePage(mealViewModel: MealContract.ViewModel, planViewModel: PlanContract.
     }
 }
 
-fun myLambdaFunForDropDownMenu(selectedOption: String, listItems: List<String> = listOf("Kategorija", "Oblast", "Sastojci"), mealViewModel: MealContract.ViewModel) {
+private fun myLambdaFunForDropDownMenu(selectedOption: String, listItems: List<String> = listOf("Kategorija", "Oblast", "Sastojci"), mealViewModel: MealContract.ViewModel) {
     when (selectedOption) {
         listItems[0] -> {
             mealViewModel.getCategories()

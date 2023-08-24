@@ -10,7 +10,13 @@ import androidx.compose.ui.platform.LocalContext
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 //Da se prosledjuje i modifier!
-fun MyDropDownMenu(listItems: List<Any>, modifier: Modifier = Modifier, firstSelected: Int = 0, selectedOption: MutableState<Any> = mutableStateOf(listItems[firstSelected]), onClick: (Any?) -> Unit) {
+fun MyDropDownMenu(
+    listItems: List<Any>,
+    modifier: Modifier = Modifier,
+    firstSelected: Int = 0,
+    selectedOption: MutableState<Any> = mutableStateOf(listItems[firstSelected]),
+    onClick: (Any?) -> Unit
+) {
 //    val listItems = arrayOf("Kategorija", "Oblast", "Sastojci")
 //    val contextForToast = LocalContext.current.applicationContext
     // state of the menu
