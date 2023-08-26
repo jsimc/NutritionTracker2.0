@@ -3,6 +3,7 @@ package com.example.nutritiontracker20.data.repositories
 import io.reactivex.Completable
 import io.reactivex.Observable
 import com.example.nutritiontracker20.data.entities.SavedMealsEntity
+import com.example.nutritiontracker20.data.entities.SavedMealsEntityWithCount
 import com.example.nutritiontracker20.data.models.Meal
 
 // za Natu komentar:
@@ -14,6 +15,9 @@ interface MealRepository {
     fun insertMeal(SavedMealsEntity: SavedMealsEntity): Completable
     fun getAll(): Observable<List<SavedMealsEntity>>
     fun getById(id: Long): SavedMealsEntity
+    fun getAllCountDescByName(): Observable<List<SavedMealsEntityWithCount>>
+    fun getAllCountDescByCategory(): Observable<List<SavedMealsEntityWithCount>>
+    fun getAllCountDescByArea(): Observable<List<SavedMealsEntityWithCount>>
 
     /////////////////////////////////////////////////////////////////////////////////
     // sa API

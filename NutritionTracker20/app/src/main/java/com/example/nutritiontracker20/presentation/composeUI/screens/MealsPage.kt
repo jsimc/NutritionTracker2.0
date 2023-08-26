@@ -217,14 +217,14 @@ fun MealsPage(mealViewModel: MealContract.ViewModel, planViewModel: PlanContract
                         Toast.makeText(context, (mealsState.value as Resource.Error).error.message ?: "Error", Toast.LENGTH_SHORT).show()
                     }
                     is Resource.Success -> {
-                        flagUpperArrow = counter > 0
-                        flagDownArrow = (counter+counterDefault) < (mealsState.value as Resource.Success).data.size //valjda ce moci
                         var mealsList = (mealsState.value as Resource.Success).data
+                        flagUpperArrow = counter > 0
+                        flagDownArrow = (counter+counterDefault) < mealsList.size //valjda ce moci
                         if(!sortBy) mealsList = mealsList.sortedByDescending { meal -> meal.strMeal }
                         var i = counter
                         while (i < mealsList.size && i < counter+counterDefault) {
                             val meal = mealsList[i]
-                            MealListView(navController = navController, meal = meal) {
+                            MealListView(meal = meal) {
                                 if(CREATE_PLAN_MODE) {
                                     // TODO
                                     //  planViewModel.mapa

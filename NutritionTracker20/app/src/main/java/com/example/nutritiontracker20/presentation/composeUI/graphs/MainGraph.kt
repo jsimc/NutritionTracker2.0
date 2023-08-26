@@ -34,5 +34,8 @@ fun NavGraphBuilder.mainGraph(
         composable(route = CREATE_PLAN_SCREEN) {
             CreatePlanScreen(planViewModel = planViewModel, navController = navController)
         }
+        composable(route = FAVORITES_SCREEN) {
+            FavoritesScreen(mealViewModel = mealViewModel)
+        }
     }
 }

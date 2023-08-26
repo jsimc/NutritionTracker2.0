@@ -7,6 +7,7 @@ import androidx.room.Query
 import io.reactivex.Completable
 import io.reactivex.Observable
 import com.example.nutritiontracker20.data.entities.SavedMealsEntity
+import com.example.nutritiontracker20.data.entities.SavedMealsEntityWithCount
 
 @Dao
 abstract class SavedMealDao {
@@ -20,4 +21,21 @@ abstract class SavedMealDao {
 
     @Query("SELECT * FROM saved_meals WHERE id == :id")
     abstract fun getById(id: Long): SavedMealsEntity
+    @Query("SELECT *, COUNT(*) AS count " +
+            "FROM saved_meals " +
+            "GROUP BY meal " +
+            "ORDER BY count DESC;")
+    abstract fun getAllCountDescByName(): Observable<List<SavedMealsEntityWithCount>>
+    @Query("SELECT *, COUNT(*) AS count " +
+            "FROM saved_meals " +
+            "GROUP BY category " +
+            "ORDER BY count DESC;")
+    abstract fun getAllCountDescByCategory(): Observable<List<SavedMealsEntityWithCount>>
+
+    @Query("SELECT *, COUNT(*) AS count " +
+            "FROM saved_meals " +
+            "GROUP BY region " +
+            "ORDER BY count DESC;")
+    abstract fun getAllCountDescByArea(): Observable<List<SavedMealsEntityWithCount>>
+
 }

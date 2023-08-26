@@ -78,7 +78,6 @@ fun HomePage(mealViewModel: MealContract.ViewModel, planViewModel: PlanContract.
                                 if(!sortBy) mealsList = mealsList.sortedByDescending { meal -> meal.strMeal }
                                 for (meal in mealsList) {
                                     MealListView(
-                                        navController = navController,
                                         meal = meal,
                                         onClick = {
                                             if(CREATE_PLAN_MODE) {

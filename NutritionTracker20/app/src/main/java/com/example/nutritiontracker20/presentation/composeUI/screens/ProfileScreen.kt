@@ -96,7 +96,15 @@ fun ProfileScreen(userViewModel: UserContract.ViewModel, navController: NavContr
         item {
             RowItemTextField(label = "Recommended calory intake", initialValue = user.value?.suggestedKcal.toString() ?: "Not available", initial = user, forKcalBool = true, readOnly = true, onChange = {})
         }
-        
+        item {
+            Button(onClick = {
+                navController.navigate(FAVORITES_SCREEN)
+            }) {
+                Text(text = "Favorites")
+            }
+        }
+
+// STATISTICS - GRAPH
         item {
             Statistics(savedMeals = SAVED_MEALS)
         }

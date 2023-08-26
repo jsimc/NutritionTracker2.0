@@ -14,6 +14,7 @@ const val SAVE_MEAL_SCREEN = "save_meal_screen"
 const val PROFILE_SCREEN = "profile_screen"
 const val CREATE_PLAN_SCREEN = "create_plan_screen"
 const val LOGIN_SCREEN = "login_screen"
+const val FAVORITES_SCREEN = "favorites_screen"
 //------------------------------------------------------
 const val MAIN_GRAPH = "main_graph"
 const val INTRO_GRAPH = "intro_graph"

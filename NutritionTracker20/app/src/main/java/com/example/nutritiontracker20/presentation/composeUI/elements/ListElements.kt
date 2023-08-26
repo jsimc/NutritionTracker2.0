@@ -61,25 +61,11 @@ fun MyPopup (info: String) {
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Composable
-fun MealListView(navController: NavController, meal: Meal, onClick: () -> Unit) {
+fun MealListView(meal: Meal, onClick: () -> Unit) {
     Surface(modifier = Modifier
         .padding(5.dp)
         .fillMaxSize()
         .clickable {
-            // mozda da u mealViewModel imamo jedan chosenKategorija
-            // kako bismo znali sta da prikazemo u sledecem skrinu
-            // TODO
-            //  onClick
-            if (/*mealViewModel.isCreatePlanRegime()*/true) {
-                // TODO onda se ne navigira na MEAL_DETAIL_PAGE vec se vraca na
-                //  createPlanScreen I dodaje plan za dan koji je bio kliknut, moramo smisliti kako proslediti taj dan
-                //  vrv isto preko mealViewModela.
-//                navController.navigate(CREATE_PLAN_SCREEN) {
-//                    popUpTo(HOME_PAGE) {
-//                        inclusive = true
-//                    }
-//                }
-            }
             onClick()
         }
         .clip(MaterialTheme.shapes.medium)
@@ -136,6 +122,65 @@ fun JIngredientListView(navController: NavController, ingredient: JIngredient, o
                 Text(text = ingredient.strIngredient ?: "")
                 MyPopup(info = ingredient.strDescription ?: "")
             }
+        }
+    }
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+@Composable
+fun FavMealListView(meal: String, photo: String, count: Int, onClick: () -> Unit) {
+    Surface(modifier = Modifier
+        .padding(5.dp)
+        .fillMaxSize()
+        .clickable {
+            onClick()
+        }
+        .clip(MaterialTheme.shapes.medium)
+    ) {
+        Column(modifier = Modifier
+            .padding(8.dp)
+            .fillMaxSize()) {
+            Text(text = meal)
+            AsyncImage(model = photo, contentDescription = "slika")
+            Text(text = "Count: $count")
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+@Composable
+fun FavMealCategoryListView(category: String, count: Int, onClick: () -> Unit) {
+    Surface(modifier = Modifier
+        .padding(5.dp)
+        .fillMaxSize()
+        .clickable {
+            onClick()
+        }
+        .clip(MaterialTheme.shapes.medium)
+    ) {
+        Column(modifier = Modifier
+            .padding(8.dp)
+            .fillMaxSize()) {
+            Text(text = category)
+            Text(text = "Count: $count")
+        }
+    }
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+@Composable
+fun FavMealAreaListView(area: String, count: Int, onClick: () -> Unit) {
+    Surface(modifier = Modifier
+        .padding(5.dp)
+        .fillMaxSize()
+        .clickable {
+            onClick()
+        }
+        .clip(MaterialTheme.shapes.medium)
+    ) {
+        Column(modifier = Modifier
+            .padding(8.dp)
+            .fillMaxSize()) {
+            Text(text = area)
+            Text(text = "Count: $count")
         }
     }
 }

@@ -1,7 +1,9 @@
 package com.example.nutritiontracker20.presentation.contracts
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.nutritiontracker20.data.entities.SavedMealsEntity
+import com.example.nutritiontracker20.data.entities.SavedMealsEntityWithCount
 import com.example.nutritiontracker20.data.models.Category
 import com.example.nutritiontracker20.data.models.Meal
 import com.example.nutritiontracker20.data.models.Resource
@@ -27,6 +29,7 @@ interface MealContract {
         val chosenIngredient: LiveData<Resource<JIngredient>>
 
         val savedMealState: LiveData<Boolean>
+        val favoriteMealsState: LiveData<Resource<List<SavedMealsEntityWithCount>>>
 
         fun getMeals()
         fun getMealById(id: Int)
@@ -53,5 +56,8 @@ interface MealContract {
     /////////////////////////////////////////////////////////////////////////////
         // SA BAZOM
         fun saveMealToFavorites(savedMealsEntity: SavedMealsEntity)
+        fun getAllCountDescByName()
+        fun getAllCountDescByCategory()
+        fun getAllCountDescByArea()
     }
 }

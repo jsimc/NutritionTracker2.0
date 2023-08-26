@@ -1,16 +1,13 @@
 package com.example.nutritiontracker20.data.repositories
 
-import android.annotation.SuppressLint
-import android.util.Log
 import io.reactivex.Completable
 import io.reactivex.Observable
 import com.example.nutritiontracker20.data.datasources.daos.SavedMealDao
 import com.example.nutritiontracker20.data.datasources.remote.MealService
 import com.example.nutritiontracker20.data.entities.SavedMealsEntity
+import com.example.nutritiontracker20.data.entities.SavedMealsEntityWithCount
 import com.example.nutritiontracker20.data.models.Meal
 import com.example.nutritiontracker20.data.models.domain.JMeal
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 class MealRepositoryImpl(
     private val savedMealDao: SavedMealDao,
@@ -26,6 +23,18 @@ class MealRepositoryImpl(
 
     override fun getById(id: Long): SavedMealsEntity {
         return savedMealDao.getById(id)
+    }
+
+    override fun getAllCountDescByName(): Observable<List<SavedMealsEntityWithCount>> {
+        return savedMealDao.getAllCountDescByName()
+    }
+
+    override fun getAllCountDescByCategory(): Observable<List<SavedMealsEntityWithCount>> {
+        return savedMealDao.getAllCountDescByCategory()
+    }
+
+    override fun getAllCountDescByArea(): Observable<List<SavedMealsEntityWithCount>> {
+        return savedMealDao.getAllCountDescByArea()
     }
 
     /////////////////////////// sa APIja ////////////////////////////////////////

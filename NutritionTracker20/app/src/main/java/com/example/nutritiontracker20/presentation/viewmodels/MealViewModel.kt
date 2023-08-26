@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.nutritiontracker20.data.entities.SavedMealsEntity
+import com.example.nutritiontracker20.data.entities.SavedMealsEntityWithCount
 import com.example.nutritiontracker20.data.models.Category
 import com.example.nutritiontracker20.data.models.Meal
 import com.example.nutritiontracker20.data.models.Resource
@@ -56,6 +57,8 @@ class MealViewModel(
 
     // saved meal state
     override val savedMealState: MutableLiveData<Boolean> = MutableLiveData()
+
+    override val favoriteMealsState: MutableLiveData<Resource<List<SavedMealsEntityWithCount>>> = MutableLiveData()
 
     init {
         getCategories()
@@ -314,6 +317,60 @@ class MealViewModel(
         // za dobalvjanje kategorija, Oblasti. .. .
         subscriptions.add(sub)
     }
+
+    override fun getAllCountDescByName() {
+        val sub = mealRepository
+            .getAllCountDescByName()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    favoriteMealsState.value = Resource.Success(it)
+                    Log.d("FavoriteMeals", "Success-Name")
+                },
+                {
+                    favoriteMealsState.value = Resource.Error(it, listOf())
+                    Log.d("FavoriteMeals", "Error-Name")
+                }
+            )
+        subscriptions.add(sub)
+    }
+
+    override fun getAllCountDescByCategory() {
+        val sub = mealRepository
+            .getAllCountDescByCategory()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    favoriteMealsState.value = Resource.Success(it)
+                    Log.d("FavoriteMeals", "Success-Category")
+                },
+                {
+                    favoriteMealsState.value = Resource.Error(it, listOf())
+                    Log.d("FavoriteMeals", "Error-Category")
+                }
+            )
+        subscriptions.add(sub)    }
+
+    override fun getAllCountDescByArea() {
+        val sub = mealRepository
+            .getAllCountDescByArea()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    favoriteMealsState.value = Resource.Success(it)
+                    Log.d("FavoriteMeals", "Success-Area")
+                },
+                {
+                    favoriteMealsState.value = Resource.Error(it, listOf())
+                    Log.d("FavoriteMeals", "Error-Area")
+                }
+            )
+        subscriptions.add(sub)
+    }
+
     override fun onCleared() {
         super.onCleared()
         subscriptions.clear()
