@@ -7,12 +7,9 @@ import androidx.room.Room
 import com.example.nutritiontracker20.BuildConfig
 import com.example.nutritiontracker20.data.db.MealDatabase
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -30,7 +27,8 @@ val coreModule = module {
     //single znaci da je jedinstveni i uvek se na isti vraca referenca
     single {createMoshi()}
     single {createOkHttpClient()}
-    single {createRetrofit(moshi = get(), httpClient = get())}
+    single {createRetrofitForMeal(moshi = get(), httpClient = get())}
+    //single { createRetrofitForKcal(moshi = get(), httpClient = get()) }
 
     single { Room.databaseBuilder(androidContext(), MealDatabase::class.java,"MealDB")
         .fallbackToDestructiveMigration()
@@ -52,16 +50,29 @@ fun createMoshi(): Moshi {
         .build()
 }
 // ovo ce morati drugacije jer vucemo podatke sa dva apija
-fun createRetrofit(moshi: Moshi,
+fun createRetrofitForMeal(moshi: Moshi,
                    httpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
         .baseUrl("https://www.themealdb.com/api/json/v1/1/")
+        //.baseUrl("https://") ovaj ce da bude base zato sto je url za drugi api https://api.api-ninjas.com/v1/nutrition?query=
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
         .client(httpClient)
         .build()
 
 }
+//Ovo je konekcija za api sa klorijama
+//fun createRetrofitForKcal(moshi: Moshi,
+//                   httpClient: OkHttpClient): Retrofit {
+//    return Retrofit.Builder()
+//        .baseUrl("https://api.api-ninjas.com/v1/nutrition?query=")
+//        //.baseUrl("https://") ovaj ce da bude base zato sto je url za drugi api https://api.api-ninjas.com/v1/nutrition?query=
+//        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+//        .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
+//        .client(httpClient)
+//        .build()
+//
+//}
 
 fun createOkHttpClient(): OkHttpClient {
     val httpClient = OkHttpClient.Builder()
