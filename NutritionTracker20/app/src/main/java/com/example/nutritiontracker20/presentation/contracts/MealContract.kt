@@ -31,6 +31,8 @@ interface MealContract {
         val savedMealState: LiveData<Boolean>
         val favoriteMealsState: LiveData<Resource<List<SavedMealsEntityWithCount>>>
 
+        val mealsForGraph: LiveData<Resource<List<SavedMealsEntity>>>
+
         fun getMeals()
         fun getMealById(id: Int)
         fun getMealByName(name: String)
@@ -59,5 +61,6 @@ interface MealContract {
         fun getAllCountDescByName()
         fun getAllCountDescByCategory()
         fun getAllCountDescByArea()
+        fun getAllForGraph()
     }
 }

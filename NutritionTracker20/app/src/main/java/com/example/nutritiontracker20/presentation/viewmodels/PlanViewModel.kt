@@ -10,6 +10,7 @@ import com.example.nutritiontracker20.utils.eMealOfTheDay
 import java.time.DayOfWeek
 
 class PlanViewModel() : ViewModel(), PlanContract.ViewModel {
+                                                    // dan u nedelji, mealPlan
     override val weekMealsMap: MutableLiveData<MutableMap<String, MealPlan>> = MutableLiveData(mutableMapOf()) //kontam ovo prazna mapa
     override val chosenDayOfTheWeek: MutableLiveData<DayOfWeek> = MutableLiveData()
     override val chosenMealOfTheDay: MutableLiveData<eMealOfTheDay> = MutableLiveData()

@@ -29,7 +29,7 @@ fun NavGraphBuilder.mainGraph(
             SaveMealScreen(mealViewModel = mealViewModel, userViewModel = userViewModel, navController = navController)
         }
         composable(route = PROFILE_SCREEN) {
-            ProfileScreen(userViewModel = userViewModel, navController = navController)
+            ProfileScreen(userViewModel = userViewModel, mealViewModel = mealViewModel, navController = navController)
         }
         composable(route = CREATE_PLAN_SCREEN) {
             CreatePlanScreen(planViewModel = planViewModel, navController = navController)

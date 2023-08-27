@@ -18,6 +18,7 @@ interface MealRepository {
     fun getAllCountDescByName(): Observable<List<SavedMealsEntityWithCount>>
     fun getAllCountDescByCategory(): Observable<List<SavedMealsEntityWithCount>>
     fun getAllCountDescByArea(): Observable<List<SavedMealsEntityWithCount>>
+    fun getAllForGraph(): Observable<List<SavedMealsEntity>>
 
     /////////////////////////////////////////////////////////////////////////////////
     // sa API

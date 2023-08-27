@@ -22,11 +22,12 @@ import com.example.nutritiontracker20.R
 import com.example.nutritiontracker20.data.models.User
 import com.example.nutritiontracker20.presentation.composeUI.elements.MyDropDownMenu
 import com.example.nutritiontracker20.presentation.composeUI.elements.Statistics
+import com.example.nutritiontracker20.presentation.contracts.MealContract
 import com.example.nutritiontracker20.presentation.contracts.UserContract
 import com.example.nutritiontracker20.utils.*
 
 @Composable
-fun ProfileScreen(userViewModel: UserContract.ViewModel, navController: NavController) {
+fun ProfileScreen(userViewModel: UserContract.ViewModel, mealViewModel: MealContract.ViewModel, navController: NavController) {
 //    val lifecycle = LocalLifecycleOwner.current
     val context = LocalContext.current
     val sharedPreferences: SharedPreferences = context.getSharedPreferences("loggedIn", Context.MODE_PRIVATE)
@@ -106,7 +107,7 @@ fun ProfileScreen(userViewModel: UserContract.ViewModel, navController: NavContr
 
 // STATISTICS - GRAPH
         item {
-            Statistics(savedMeals = SAVED_MEALS)
+            Statistics(mealViewModel = mealViewModel) {}
         }
 
         item {

@@ -37,6 +37,10 @@ class MealRepositoryImpl(
         return savedMealDao.getAllCountDescByArea()
     }
 
+    override fun getAllForGraph(): Observable<List<SavedMealsEntity>> {
+        return savedMealDao.getAllForGraph()
+    }
+
     /////////////////////////// sa APIja ////////////////////////////////////////
     override fun getMeals(): Observable<List<Meal>> {
         return mealService

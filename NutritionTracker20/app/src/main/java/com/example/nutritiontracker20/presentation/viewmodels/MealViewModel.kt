@@ -57,9 +57,9 @@ class MealViewModel(
 
     // saved meal state
     override val savedMealState: MutableLiveData<Boolean> = MutableLiveData()
-
     override val favoriteMealsState: MutableLiveData<Resource<List<SavedMealsEntityWithCount>>> = MutableLiveData()
 
+    override val mealsForGraph: MutableLiveData<Resource<List<SavedMealsEntity>>> = MutableLiveData()
     init {
         getCategories()
         val subscription = publishSubject
@@ -366,6 +366,24 @@ class MealViewModel(
                 {
                     favoriteMealsState.value = Resource.Error(it, listOf())
                     Log.d("FavoriteMeals", "Error-Area")
+                }
+            )
+        subscriptions.add(sub)
+    }
+
+    override fun getAllForGraph() {
+        val sub = mealRepository
+            .getAllForGraph()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    mealsForGraph.value = Resource.Success(it)
+                    Log.d("ForGraph", "Success")
+                },
+                {
+                    mealsForGraph.value = Resource.Error(it, listOf())
+                    Log.d("ForGraph", "Error")
                 }
             )
         subscriptions.add(sub)

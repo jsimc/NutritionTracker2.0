@@ -38,4 +38,9 @@ abstract class SavedMealDao {
             "ORDER BY count DESC;")
     abstract fun getAllCountDescByArea(): Observable<List<SavedMealsEntityWithCount>>
 
+    @Query("SELECT * " +
+            "FROM saved_meals " +
+            "WHERE date >= strftime('%s', 'now', '-7 days') * 1000 " +
+            "  AND date <= strftime('%s', 'now') * 1000")
+    abstract fun getAllForGraph(): Observable<List<SavedMealsEntity>>
 }
